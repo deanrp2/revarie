@@ -1,2 +1,2 @@
-# revarie
-Revarie is intended to contain an efficient toolset for generating random fields based on a specified variogram.
+# Revarie
+Revarie is intended to contain an efficient toolset for generating random fields based on a specified variogram with particular application in computational simulation.
