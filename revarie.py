@@ -45,7 +45,7 @@ class Revarie:
 
 
 if __name__ == "__main__":
-    n_pts = 1000
+    n_pts = 10000
 
     x = np.zeros((n_pts, 2))
     x[:,1] = np.random.uniform(0,1,n_pts)
