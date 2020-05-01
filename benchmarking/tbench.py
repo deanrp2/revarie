@@ -30,10 +30,11 @@ for j, pn in enumerate(ptnums):
     for i in range(8):
         start = time.time()
         t = Revarie(x,mu,nug,sill,rang,"sph")
+        t.mnorm()
         trials[i] = time.time() - start
     times[j] = trials.mean()
 
-with open("2D_bench_2020-4-30.dat","w") as f:
+with open("bbbb","w") as f:
     for pn in ptnums:
         f.write("%i"%pn + ",")
     f.write("\n")
