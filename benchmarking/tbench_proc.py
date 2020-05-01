@@ -8,7 +8,7 @@ infile = "1D_bench_2020-4-29.dat"
 
 with open(infile, "r") as f:
     d = f.read().splitlines()
-    
+
 n = np.array(d[0].split(",")[:-1]).astype(np.float64)
 times = np.array(d[1].split(",")[:-1]).astype(np.float64)
 
