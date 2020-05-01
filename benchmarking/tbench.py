@@ -19,14 +19,13 @@ mu = 0
 dom_upper = 1
 dom_lower = 0
 
-ptnums = np.linspace(1000,4000, 200).astype(np.int)
+ptnums = np.linspace(1000,4000, 20).astype(np.int)
 
 times = np.zeros_like(ptnums).astype(np.float64)
 trials = np.zeros(8)
 for j, pn in enumerate(ptnums):
-    x = np.zeros((pn, 2))
-    x[:,1] = np.random.uniform(0,1,pn)
-    x[:,0] = np.random.uniform(0,1,pn)
+    print(str(pn) + "/4000")
+    x = np.linspace(0,1,pn)
     for i in range(8):
         start = time.time()
         t = Revarie(x,mu,nug,sill,rang,"sph")
@@ -34,7 +33,7 @@ for j, pn in enumerate(ptnums):
         trials[i] = time.time() - start
     times[j] = trials.mean()
 
-with open("bbbb","w") as f:
+with open("1D_bench_2020-5-1.dat","w") as f:
     for pn in ptnums:
         f.write("%i"%pn + ",")
     f.write("\n")
