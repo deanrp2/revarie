@@ -45,15 +45,27 @@ class Revarie:
 
 
 if __name__ == "__main__":
-    n_pts = 10000
-
+    n_pts = 2000
+    #np.random.seed(2)
     x = np.zeros((n_pts, 2))
     x[:,1] = np.random.uniform(0,1,n_pts)
     x[:,0] = np.random.uniform(0,1,n_pts)
 
-    #x = np.linspace(0,1,n_pts)
+    nug = 0
+    sill = 1
+    rang = 0.8
+   
+    
 
-    test = Revarie(x, 0,0,1.1,0.3,"sph")
+    x = np.linspace(0,1,n_pts)
+    #x = np.sort(np.random.uniform(0,n_pts))
 
-    plt.scatter(x[:,0],x[:,1],c=test.mnorm(), s = 2)
-    plt.show()
+    test = Revarie(x, 0,nug,sill,rang,"sph")
+    field =test.mnorm()
+
+    plt.figure()
+    plt.plot(x, field,"k")
+    #plt.scatter(x[:,0],x[:,1],c= field , s = 9)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.tight_layout()
