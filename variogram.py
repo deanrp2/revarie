@@ -17,6 +17,7 @@ class Exp_Variogram:
         self.cond_init()
 
         self.lags = self.calc_lags()
+        self.diffs = self.calc_diffs()
 
         self.set_bins(bins, bin_type)
 
@@ -24,7 +25,7 @@ class Exp_Variogram:
     def set_bins(self, bins, bin_type):
         if bin_type == "lin":
             db = (bins[1] - bins[0])/(bins[2] - 1)
-            self.bin_bounds = np.lispace(bins[0],bins[1],bins[2]+1)-db/2
+            self.bin_bounds = np.linspace(bins[0],bins[1],bins[2]+1)-db/2
         elif bin_type == "bound":
             self.bin_bounds = np.asarray(bins)
         elif bin_type == "auto":
@@ -32,6 +33,12 @@ class Exp_Variogram:
 
     def calc_lags(self):
         return pdist(self.x)
+
+    def calc_diffs(self):
+        diffs = np.zeros(self.s*(self.s-1)//2)
+        comb_indcs = np.mask_indices(self.s, np.triu, k=1)
+        print(comb_indcs)
+        return None
 
     def check_init(self):
         #check object for valid creation
@@ -55,7 +62,7 @@ class Exp_Variogram:
 
 
 if __name__ == "__main__":
-    x = np.linspace(0,1,100)
+    x = np.linspace(0,1,10)
     f = x**2
 
     test = Exp_Variogram(x,f, (1,10,10) ,"lin")
