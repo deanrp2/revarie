@@ -54,8 +54,6 @@ if __name__ == "__main__":
     nug = 0
     sill = 1
     rang = 0.8
-   
-    
 
     x = np.linspace(0,1,n_pts)
     #x = np.sort(np.random.uniform(0,n_pts))
