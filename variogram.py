@@ -35,10 +35,9 @@ class Exp_Variogram:
         return pdist(self.x)
 
     def calc_diffs(self):
-        diffs = np.zeros(self.s*(self.s-1)//2)
-        comb_indcs = np.mask_indices(self.s, np.triu, k=1)
-        print(comb_indcs)
-        return None
+        c_indx = np.mask_indices(self.s, np.triu, k=1)
+        diffs = (self.f[c_indx[0]] - self.f[c_indx[1]])**2
+        return diffs
 
     def check_init(self):
         #check object for valid creation
