@@ -19,6 +19,9 @@ class Exp_Variogram:
         self.lags = self.calc_lags()
         self.diffs = self.calc_diffs()
 
+        print(self.lags)
+        print(self.diffs)
+
         self.set_bins(bins, bin_type)
 
 
@@ -61,7 +64,7 @@ class Exp_Variogram:
 
 
 if __name__ == "__main__":
-    x = np.linspace(0,1,10)
-    f = x**2
+    x = np.array([[1,2,4,6],[1,1,1,1]]).T
+    f = np.array([0,1,3,6])
 
     test = Exp_Variogram(x,f, (1,10,10) ,"lin")
