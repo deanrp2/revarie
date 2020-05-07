@@ -32,7 +32,7 @@ class Revarie:
 
         lags = pdist(x)
 
-        h_cov[mask_indices] = self.model(lags, self.sill, self.rang, self.nug)
+        h_cov[mask_indices] = self.model(lags, self.nug, self.sill, self.rang)
 
         self.cov = np.maximum(h_cov,h_cov.T)
 
