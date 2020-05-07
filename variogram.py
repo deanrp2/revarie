@@ -19,10 +19,10 @@ class Exp_Variogram:
         self.lags = self.calc_lags()
         self.diffs = self.calc_diffs()
 
-        print(self.lags)
-        print(self.diffs)
-
         self.set_bins(bins, bin_type)
+
+    def cloud(self):
+        return self.lags, self.diffs
 
 
     def set_bins(self, bins, bin_type):
@@ -45,11 +45,11 @@ class Exp_Variogram:
     def check_init(self):
         #check object for valid creation
         # --- x and f same size
-        # --- x and f numpy arrays
         # --- f is 0D
         # --- check that bins and bintype line up
         # --- check if bincenters make any negative lags
         # --- check order of bounds and cent
+        # --- check if x is set up correctly shape (ndim, ndata)
         return 0
 
     def cond_init(self):
@@ -64,7 +64,10 @@ class Exp_Variogram:
 
 
 if __name__ == "__main__":
-    x = np.array([[1,2,4,6],[1,1,1,1]]).T
-    f = np.array([0,1,3,6])
+    x = np.linspace(0,np.pi,100)
+    f = np.sin(x)
 
     test = Exp_Variogram(x,f, (1,10,10) ,"lin")
+    l, d = test.cloud()
+    plt.plot(l,d,"k.")
+    plt.show()
