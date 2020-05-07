@@ -1,9 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.spatial.distance import pdist
+from numpy_indexed import group_by
+import functools
 
 class Exp_Variogram:
-    def __init__(self, x, f, bins, bin_type):
+    def __init__(self, x, f):
         """
         bin_type: "lin" (minlag, maxlag, nlag) min and max lag 
         samewidth as others, "bound","auto"
@@ -12,27 +14,55 @@ class Exp_Variogram:
 
         self.x = x
         self.f = f
-        self.s = f.size
 
         self.cond_init()
+
+        self.s = f.size
 
         self.lags = self.calc_lags()
         self.diffs = self.calc_diffs()
 
-        self.set_bins(bins, bin_type)
+        self.range = (np.min(self.lags), np.max(self.lags))
 
     def cloud(self):
         return self.lags, self.diffs
 
+    def _c_matheron(f):
+        #bin order, bin type etc
+        @functools.wraps(f)
+        def wrapper(self, bin_type, bins, var):
+            if not isinstance(bin_type, str):
+                print("ERROR")
+            return f(self, bin_type, bins, var)
+        return wrapper
 
-    def set_bins(self, bins, bin_type):
+    @_c_matheron
+    def matheron(self, bin_type = "auto", bins = 10, var = False):
+        bins = self.set_bins(bin_type, bins)
+        centers = bins[:-1] + np.diff(bins,1)/2
+
+        b_ind = np.digitize(self.lags, bins)
+        n_bins = np.bincount(b_ind-1)
+
+        gp = group_by(b_ind[np.where(b_ind != bins.size)])
+        _, v = gp.mean(self.diffs[np.where(b_ind != bins.size)])#account for lags bigger than bins
+
+        if var:
+            _, v_var = gp.var(self.diffs[np.where(b_ind != bins.size)])#account for lags bigger than bins
+            return centers, n_bins[:-1], v, v_var
+        else:
+            return centers, n_bins[:-1], v
+
+
+
+    def set_bins(self, bin_type, bins):
         if bin_type == "lin":
             db = (bins[1] - bins[0])/(bins[2] - 1)
-            self.bin_bounds = np.linspace(bins[0],bins[1],bins[2]+1)-db/2
+            return np.linspace(bins[0],bins[1],bins[2]+1)-db/2
         elif bin_type == "bound":
-            self.bin_bounds = np.asarray(bins)
+            return np.asarray(bins)
         elif bin_type == "auto":
-            print("auto not yet implimented")
+            return np.linspace(0,self.range[1]/2,bins+1)
 
     def calc_lags(self):
         return pdist(self.x)
@@ -41,6 +71,7 @@ class Exp_Variogram:
         c_indx = np.mask_indices(self.s, np.triu, k=1)
         diffs = (self.f[c_indx[0]] - self.f[c_indx[1]])**2
         return diffs
+
 
     def check_init(self):
         #check object for valid creation
@@ -64,10 +95,14 @@ class Exp_Variogram:
 
 
 if __name__ == "__main__":
-    x = np.linspace(0,np.pi,100)
+    x = np.random.uniform(0,np.pi,6000)
     f = np.sin(x)
 
-    test = Exp_Variogram(x,f, (1,10,10) ,"lin")
-    l, d = test.cloud()
-    plt.plot(l,d,"k.")
+    test = Exp_Variogram(x,f)
+    centers, n, v, v_var = test.matheron("lin", [0,np.pi,20], True)
+
+    plt.plot(centers, v, "k.")
+    plt.plot(centers, v + v_var, "b--")
+    plt.plot(centers, v - v_var, "b--")
     plt.show()
+
