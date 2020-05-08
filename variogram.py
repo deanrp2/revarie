@@ -40,6 +40,18 @@ class Variogram:
         self.reduced = False #included for the reduction method
 
     def cloud(self):
+        """
+        *Convenient way to get calculated lags and squared differences from
+        a Variogram instance. Named for variogram cloud plot.
+
+        Returns
+        -------
+        lags : numpy.ndarray
+            Distance between all combinations of points fed into variogram.
+        diffs : numpy.ndarray
+            Squared difference between all combinations of field values fed
+            into variogram
+        """
         return self.lags, self.diffs
 
     def _c_matheron(f):
@@ -53,20 +65,60 @@ class Variogram:
 
     @_c_matheron
     def matheron(self, bin_type = "auto", bins = 10, var = False):
+        """
+        *Calculate Matheron variogram for points and field values previousely
+        fed into variogram. A few options for specifying binning exist.
+
+        Parameters
+        ----------
+        bin_type : str
+            Descriptor of the format of parameter to be passed into the bin
+            parameter. Can be one of:
+                * "auto" : select bounds to be (0, self.range[1]/2), bin
+                    centers will be calculated accordingly based on user given
+                    number of bins.
+                * "lin" : bin boundaries will be linearly spaced based on a
+                    user given minima, maxima and number of bins. Bin centers
+                    will not fall on given maxima and minima.
+                * "bound" : bounds will be completely given by the user as a
+                    numpy array
+        bins : int, array-like
+            Description of how binning will be performed in Matheron
+            variogram, specific formats given below for each bin type.
+                * "auto" : int giving number of bins to use
+                * "lin" : array-like object containint three entries. First is
+                    minima of bin boundaries, second is maxima of bin bounds
+                    and third is the number of bins to use
+                * "bound" : array-like object specifying boundaries of bins.
+                    Number of bins is length of this array - 1.
+        var : bool
+            Set True for bin-wise variance to be calculated and returned
+
+        Returns
+        -------
+        centers : numpy.array
+            Bin centers used for variogram
+        n_bins : numpy array
+            Number of point relations used to calculate each semivariance
+        v : numpy array
+            Estimated semivariance values at lags corresponding to bin centers
+        v_var (optional) : numpy array
+            Variance associated with squared difference values within a bin
+        """
         bins = self.set_bins(bin_type, bins)
         centers = bins[:-1] + np.diff(bins,1)/2
 
         b_ind = np.digitize(self.lags, bins)
-        n_bins = np.bincount(b_ind-1)
+        n_bins = np.bincount(b_ind-1)[:-1]
 
         gp = group_by(b_ind[np.where(b_ind != bins.size)])
         _, v = gp.mean(self.diffs[np.where(b_ind != bins.size)])#account for lags bigger than bins
 
         if var:
             _, v_var = gp.var(self.diffs[np.where(b_ind != bins.size)])#account for lags bigger than bins
-            return centers, n_bins[:-1], v, v_var
+            return centers, n_bins, v, v_var
         else:
-            return centers, n_bins[:-1], v
+            return centers, n_bins, v
 
 
     def set_bins(self, bin_type, bins):
