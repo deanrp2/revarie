@@ -4,12 +4,8 @@ from scipy.spatial.distance import pdist
 from numpy_indexed import group_by
 import functools
 
-class Exp_Variogram:
+class Variogram:
     def __init__(self, x, f):
-        """
-        bin_type: "lin" (minlag, maxlag, nlag) min and max lag 
-        samewidth as others, "bound","auto"
-        """
         self.check_init()
 
         self.x = x
@@ -23,6 +19,8 @@ class Exp_Variogram:
         self.diffs = self.calc_diffs()
 
         self.range = (np.min(self.lags), np.max(self.lags))
+
+        self.reduced = False #included for the reduction method
 
     def cloud(self):
         return self.lags, self.diffs
@@ -54,7 +52,6 @@ class Exp_Variogram:
             return centers, n_bins[:-1], v
 
 
-
     def set_bins(self, bin_type, bins):
         if bin_type == "lin":
             db = (bins[1] - bins[0])/(bins[2] - 1)
@@ -72,6 +69,60 @@ class Exp_Variogram:
         diffs = (self.f[c_indx[0]] - self.f[c_indx[1]])**2
         return diffs
 
+    def _c_reduce(f):
+        #bin order, bin type etc
+        @functools.wraps(f)
+        def wrapper(self, typ, bnds, inplace = False):
+            if not isinstance(inplace, bool):
+                print("ERROR")
+            return f(self, typ, bnds, inplace)
+        return wrapper
+
+    @_c_reduce
+    def reduce(self, typ, bnds, inplace = False):#"abs", "quant"
+        if typ  == "abs":
+            min_lag = bnds[0]
+            max_lag = bnds[1]
+        elif trim_type == "quant":
+            min_lag = np.quantile(self.lags, trim[0])
+            max_lag = np.quantile(self.lags, trim[1])
+
+        ids = np.where(min_lag <= self.lags <= max_lag)
+        self.rm_ids(ids, inplace)
+
+
+    def _c_rreduce(f):
+        #bin order, bin type etc
+        @functools.wraps(f)
+        def wrapper(self, typ, amnt, inplace = False):
+            if not isinstance(inplace, bool):
+                print("ERROR")
+            return f(self, typ, amnt, inplace)
+        return wrapper
+
+    @_c_rreduce
+    def rreduce(self, typ, amnt, inplace = False): #"abs","frac"
+        if typ == "frac":
+            size = amnt * self.lags.size
+        if typ == "abs":
+            size = amnt
+
+        ids = #ranomly select of size
+
+
+
+    def rm_ids(ids, inplace = False):
+        if inplace:
+            self.lags = self.lags[ids]
+            self.diffs = self.diffs[ids]
+        else:
+            new = Variogram(self.x, self.f)
+            new.lags = new.lags[ids]
+            new.diffs = new.diffs[ids]
+            new.range = (np.min(new.lags), np.max(new.lags))
+            new.reduce = True
+
+            return new
 
     def check_init(self):
         #check object for valid creation
@@ -93,12 +144,11 @@ class Exp_Variogram:
 
 
 
-
 if __name__ == "__main__":
     x = np.random.uniform(0,np.pi,6000)
     f = np.sin(x)
 
-    test = Exp_Variogram(x,f)
+    test = Variogram(x,f)
     centers, n, v, v_var = test.matheron("lin", [0,np.pi,20], True)
 
     plt.plot(centers, v, "k.")
