@@ -103,11 +103,12 @@ class Variogram:
     @_c_rreduce
     def rreduce(self, typ, amnt, inplace = False): #"abs","frac"
         if typ == "frac":
-            size = amnt * self.lags.size
+            size = int(amnt * self.lags.size)
         if typ == "abs":
             size = amnt
 
-        ids = #ranomly select of size
+        ids = np.choice(self.lags.size, size)
+        self.rm_ids(ids, inplace)
 
 
 
