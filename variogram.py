@@ -5,7 +5,24 @@ from numpy_indexed import group_by
 import functools
 
 class Variogram:
+    """
+
+    Calculates lag and squared difference values. Various operations can be
+    performed with these quantities.
+
+    """
     def __init__(self, x, f):
+        """
+        Create variogram and calculate lags and squared differences
+
+        Parameters
+        ----------
+        x : numpy.ndarray
+            Array of shape (m,n) where n is number of points in an
+            m-dimensional domain
+        f : numpy.ndarray
+            Array of field values observed at each of the n points.
+        """
         self.check_init()
 
         self.x = x
@@ -116,6 +133,7 @@ class Variogram:
         if inplace:
             self.lags = self.lags[ids]
             self.diffs = self.diffs[ids]
+            self.range = (np.min(self.lags), np.max(self.lags))
         else:
             new = Variogram(self.x, self.f)
             new.lags = new.lags[ids]
@@ -146,14 +164,15 @@ class Variogram:
 
 
 if __name__ == "__main__":
-    x = np.random.uniform(0,np.pi,6000)
-    f = np.sin(x)
+    x = np.random.uniform(0,np.pi,(10,2))
+    f = np.sin(x[:,0])
 
     test = Variogram(x,f)
-    centers, n, v, v_var = test.matheron("lin", [0,np.pi,20], True)
+    print(test.diffs)
+    #centers, n, v, v_var = test.matheron("lin", [0,np.pi,20], True)
 
-    plt.plot(centers, v, "k.")
-    plt.plot(centers, v + v_var, "b--")
-    plt.plot(centers, v - v_var, "b--")
-    plt.show()
+    #plt.plot(centers, v, "k.")
+    #plt.plot(centers, v + v_var, "b--")
+    #plt.plot(centers, v - v_var, "b--")
+    #plt.show()
 
