@@ -56,19 +56,30 @@ class Variogram:
         return self.lags, self.diffs
 
     def _c_matheron(f):
-        # --- check that bins and bintype line up
-        # --- check if bincenters make any negative lags
-        # --- check order of bounds and cent
-        #bin order, bin type etc
         @functools.wraps(f)
         def wrapper(self, bin_type, bins, var):
-            if not isinstance(bin_type, str):
-                print("ERROR")
+            if bin_type == "auto":
+                if not int(bins) == bins:
+                    raise Exception("Number of bins not correctly castable to"
+                            " int")
+            elif bin_type == "bound":
+                if not all(bins[i] <= bins[i+1] for i in range(len(bins)-1)):
+                    raise Exception("Bin boundaries must be arranged in"
+                                    " ascending order")
+            elif bin_type == "lin":
+                if bins[0] > bins[1]:
+                    raise Exception("Check format of 'bins' parameter, minima"
+                        " should be first element.")
+                if int(bins[2]) != bins[2]:
+                    raise Exception("Number of bins not correctly castable to"
+                            " int")
+
             return f(self, bin_type, bins, var)
         return wrapper
 
     @_c_matheron
     def matheron(self, bin_type = "auto", bins = 10, var = False):
+        #should add binning with constant number of values
         """
         *Calculate Matheron variogram for points and field values previousely
         fed into variogram. A few options for specifying binning exist.
@@ -86,13 +97,13 @@ class Variogram:
                     will not fall on given maxima and minima.
                 * "bound" : bounds will be completely given by the user as a
                     numpy array
-        bins : int, array-like
+        bins : int, list, array-like
             Description of how binning will be performed in Matheron
             variogram, specific formats given below for each bin type.
                 * "auto" : int giving number of bins to use
-                * "lin" : array-like object containint three entries. First is
-                    minima of bin boundaries, second is maxima of bin bounds
-                    and third is the number of bins to use
+                * "lin" : list containing three entries. First is minima of
+                    bin boundaries, second is maxima of bin bounds and third
+                    is the number of bins to use as int
                 * "bound" : array-like object specifying boundaries of bins.
                     Number of bins is length of this array - 1.
         var : bool
@@ -132,11 +143,11 @@ class Variogram:
         """
         if bin_type == "lin":
             db = (bins[1] - bins[0])/(bins[2] - 1)
-            return np.linspace(bins[0],bins[1],bins[2]+1)-db/2
+            return np.linspace(bins[0],bins[1],int(bins[2])+1)-db/2
         elif bin_type == "bound":
             return np.asarray(bins)
         elif bin_type == "auto":
-            return np.linspace(self.range[0],self.range[1]/2,bins+1)
+            return np.linspace(self.range[0],self.range[1]/2,int(bins)+1)
 
     def calc_lags(self):
         """
@@ -157,7 +168,7 @@ class Variogram:
     def _c_reduce(f):
         #bin order, bin type etc
         @functools.wraps(f)
-        def wrapper(self, typ, bnds, inplace = True):
+        def wrapper(self, typ, bnds, inplace):
             if bnds[0] > bnds [1]:
                 raise Exception("Lower and upper bounds out of order.")
             if typ == "abs":
@@ -226,9 +237,8 @@ class Variogram:
 
 
     def _c_rreduce(f):
-        #bin order, bin type etc
         @functools.wraps(f)
-        def wrapper(self, typ, amnt, inplace = False):
+        def wrapper(self, typ, amnt, inplace):
             if typ == "abs":
                 if not 0 < amnt < self.lags.size:
                     raise Exception("'amnt' not between 0 and size of"
@@ -244,7 +254,7 @@ class Variogram:
         return wrapper
 
     @_c_rreduce
-    def rreduce(self, typ, amnt, inplace = False): #"abs","frac"
+    def rreduce(self, typ, amnt, inplace = False):
         """
         *Uniformly downsample stored lags and field value differences for
         faster calculations and smaller memory size. Object points and field
