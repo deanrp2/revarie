@@ -2,8 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from  scipy.spatial.distance import pdist
 
-import .models
-
+from .models import *
 
 class Revarie:
     def __init__(self, x, mu, nug, sill, rang, model):
@@ -15,11 +14,11 @@ class Revarie:
         self.s = x.shape[0]
 
         if model == "sph":
-            self.model = models.spherical
+            self.model = spherical
         elif model == "exp":
-            self.model = models.exponential
+            self.model = exponential
         elif model == "gauss":
-            self.model = models.gaussian
+            self.model = gaussian
         self.genf(x, model)
 
     def genf(self, x, model):
