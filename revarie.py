@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from  scipy.spatial.distance import pdist
 
-import models
+import .models
 
 
 class Revarie:
