@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.spatial.distance import pdist
 from numpy_indexed import group_by
 import functools
+import warnings
 
 class Variogram:
     """
@@ -55,6 +56,9 @@ class Variogram:
         return self.lags, self.diffs
 
     def _c_matheron(f):
+        # --- check that bins and bintype line up
+        # --- check if bincenters make any negative lags
+        # --- check order of bounds and cent
         #bin order, bin type etc
         @functools.wraps(f)
         def wrapper(self, bin_type, bins, var):
@@ -284,22 +288,28 @@ class Variogram:
             return new
 
     def check_init(self):
-        #check object for valid creation
-        # --- x and f same size
-        # --- f is 0D
-        # --- check that bins and bintype line up
-        # --- check if bincenters make any negative lags
-        # --- check order of bounds and cent
-        # --- check if x is set up correctly shape (ndim, ndata)
-        return 0
+        """
+        Notify user of errors during initialization of variogram
+        """
+        if self.x.shape[0] != self.f.shape[0]:
+            raise Exception("Number of data points (x) and number of field "
+                            "values (f) do not match.")
+        if self.f.ndim > 1:
+            raise Exception("Field values data (f) should be 1D")
+        if self.x.shape[0] < self.x.shape[1]:
+            warnings.warn("Dimension of domain exceeds number of data points"
+                          " consider transposing x.")
 
     def cond_init(self):
+        """
+        Perform data format manimpulation where user interference not
+        necessary.
+        """
         self.x = np.asarray(self.x)
         self.f = np.asarray(self.f)
 
         if self.x.ndim < 2:
             self.x = self.x.reshape(x.size,1)
-        #other object type changes and such
 
 
 
