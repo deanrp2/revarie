@@ -158,8 +158,20 @@ class Variogram:
         #bin order, bin type etc
         @functools.wraps(f)
         def wrapper(self, typ, bnds, inplace = True):
-            if not isinstance(inplace, bool):
-                print("ERROR")
+            if bnds[0] > bnds [1]:
+                raise Exception("Lower and upper bounds out of order.")
+            if typ == "abs":
+                if bnds[0] < self.range[0]:
+                    warnings.warn("Lower bound smaller than smallest lag")
+                if bnds[1] > self.range[1]:
+                    warnings.warn("Upper bound greater than largest lag")
+            elif typ == "quant":
+                if not 0 < all(bnds) < 1:
+                    raise Exception("Quantile bounds must be between 0 and 1")
+            else:
+                raise Exception("'{f}' not recognized bound type".fomat(f
+                    = typ))
+
             return f(self, typ, bnds, inplace)
         return wrapper
 
@@ -217,8 +229,17 @@ class Variogram:
         #bin order, bin type etc
         @functools.wraps(f)
         def wrapper(self, typ, amnt, inplace = False):
-            if not isinstance(inplace, bool):
-                print("ERROR")
+            if typ == "abs":
+                if not 0 < amnt < self.lags.size:
+                    raise Exception("'amnt' not between 0 and size of"
+                                    " original array")
+            elif typ == "frac":
+                if not 0 < amnt < 1:
+                    raise Exception("'amnt' must be between 0 and 1 for"
+                                    " fraction reduction type")
+            else:
+                raise Exception("'{f}' not recognized bound type".format(f
+                    = typ))
             return f(self, typ, amnt, inplace)
         return wrapper
 
