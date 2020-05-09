@@ -37,7 +37,7 @@ class Variogram:
 
         self.range = (np.min(self.lags), np.max(self.lags))
 
-        self.reduced = False #included for the reduction method
+        self.reduced = False
 
     def cloud(self):
         """
@@ -72,8 +72,8 @@ class Variogram:
         Parameters
         ----------
         bin_type : str
-            Descriptor of the format of parameter to be passed into the bin
-            parameter. Can be one of:
+            Descriptor of the format of data passed into the bin parameter.
+            Can be one of:
                 * "auto" : select bounds to be (0, self.range[1]/2), bin
                     centers will be calculated accordingly based on user given
                     number of bins.
@@ -122,18 +122,30 @@ class Variogram:
 
 
     def set_bins(self, bin_type, bins):
+        """
+        Calculate bin boundaries for bin parameters. See self.matheron for
+        details.
+        """
         if bin_type == "lin":
             db = (bins[1] - bins[0])/(bins[2] - 1)
             return np.linspace(bins[0],bins[1],bins[2]+1)-db/2
         elif bin_type == "bound":
             return np.asarray(bins)
         elif bin_type == "auto":
-            return np.linspace(0,self.range[1]/2,bins+1)
+            return np.linspace(self.range[0],self.range[1]/2,bins+1)
 
     def calc_lags(self):
+        """
+        Upon initialization, calculates distances between all points given in
+        domain. Performed before any reductions are applied.
+        """
         return pdist(self.x)
 
     def calc_diffs(self):
+        """
+        Upon initialization, calculates squared differences between all field
+        values given. Performed before any reductions are applied.
+        """
         c_indx = np.mask_indices(self.s, np.triu, k=1)
         diffs = (self.f[c_indx[0]] - self.f[c_indx[1]])**2
         return diffs
@@ -141,20 +153,57 @@ class Variogram:
     def _c_reduce(f):
         #bin order, bin type etc
         @functools.wraps(f)
-        def wrapper(self, typ, bnds, inplace = False):
+        def wrapper(self, typ, bnds, inplace = True):
             if not isinstance(inplace, bool):
                 print("ERROR")
             return f(self, typ, bnds, inplace)
         return wrapper
 
     @_c_reduce
-    def reduce(self, typ, bnds, inplace = False):#"abs", "quant"
+    def reduce(self, typ, bnds, inplace = True):#"abs", "quant"
+        """
+        *Reduce the lag domain of a given Variogram object. Removes data that
+        lay outside the given lag boundaries. Very useful for reducing run
+        times and memory requirements when performing further operations with
+        variogram after initialization such as matheron. Object points and
+        field values are not affected. Resulting Variogram objects are also
+        marked with a self.reduced = True flag to indicate that the
+        self.lags and self.diffs are not reflective of all combinations of
+        self.x and self.f.
+
+        Parameters
+        ----------
+        typ : str
+            Descriptor of reduction criteria that is passed to the bnds
+            parameter. Can be one of:
+                * "abs" : eliminate data from self.diffs and self.lags that
+                    come from lags greater or less than specified values
+                * "quant" : eliminate data from self.diffs and self.lags by
+                    quantiles.
+        bnds : list
+            2-element list to describe reduction criteria. Specific formats
+            given below for each typ option.
+                * "abs" : List in the format of (min, max) for range of lags
+                    to be included after reduction.
+                * "quant" : range of quantiles in format of (min, max) to keep
+                    after reduction.
+        inplace : bool
+            Whether or not object is manipulated inplace. If False, will return
+            variogram object with same x and f values but with the reduced lag
+            domain.
+
+        Returns
+        -------
+        new (optional) : Variogram
+            New Variogram instance with same x and f values but reduced lag
+            domain.
+        """
         if typ  == "abs":
             min_lag = bnds[0]
             max_lag = bnds[1]
         elif trim_type == "quant":
-            min_lag = np.quantile(self.lags, trim[0])
-            max_lag = np.quantile(self.lags, trim[1])
+            min_lag = np.quantile(self.lags, bnds[0])
+            max_lag = np.quantile(self.lags, bnds[1])
 
         ids = np.where(min_lag <= self.lags <= max_lag)
         self.rm_ids(ids, inplace)
@@ -171,6 +220,41 @@ class Variogram:
 
     @_c_rreduce
     def rreduce(self, typ, amnt, inplace = False): #"abs","frac"
+        """
+        *Uniformly downsample stored lags and field value differences for
+        faster calculations and smaller memory size. Object points and field
+        values are not affected. Resulting Variogram objects are also marked
+        with a self.reduced = True flag to indicate that the self.lags and
+        self.diffs are not reflective of all combinations of self.x and self.f.
+
+        Parameters
+        ----------
+        typ : str
+            Descriptor of format of reduction amount passed to amnt. Can be
+            one of:
+                * "abs" : Size of remaining lag and field data difference
+                array specified as an absolute size.
+                * "frac" : Size of remaining lag and field data difference
+                array specified as a fraction of original size.
+        amnt : int, float
+            Amount to reduce lag and field difference data vectors. Specific
+            formats given below for each typ option.
+                * "abs" : int giving the size of the remaining lag and
+                    field data difference vectors.
+                * "frac" : float between 0 and 1 describing how much of lag
+                    and field difference should remain as fraction of original
+                    size
+        inplace : bool
+            Whether or not object is manipulated inplace. If False, will return
+            variogram object with same x and f values but with the reduced lag
+            domain.
+
+        Returns
+        -------
+        new (optional) : Variogram
+            New Variogram instance with same x and f values but reduced lag
+            domain.
+        """
         if typ == "frac":
             size = int(amnt * self.lags.size)
         if typ == "abs":
@@ -182,10 +266,14 @@ class Variogram:
 
 
     def rm_ids(ids, inplace = False):
+        """
+        Helper function for reduction methods.
+        """
         if inplace:
             self.lags = self.lags[ids]
             self.diffs = self.diffs[ids]
             self.range = (np.min(self.lags), np.max(self.lags))
+            self.reduce = True
         else:
             new = Variogram(self.x, self.f)
             new.lags = new.lags[ids]
