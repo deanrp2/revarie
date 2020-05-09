@@ -1,3 +1,3 @@
 from .variogram import Variogram
 from .revarie import Revarie
-import __version__
+from .__version__ import *
