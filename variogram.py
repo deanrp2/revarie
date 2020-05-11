@@ -24,11 +24,10 @@ class Variogram:
         f : numpy.ndarray
             Array of field values observed at each of the n points.
         """
-        self.check_init()
-
         self.x = x
         self.f = f
 
+        self.check_init()
         self.cond_init()
 
         self.s = f.size
@@ -327,9 +326,14 @@ class Variogram:
                             "values (f) do not match.")
         if self.f.ndim > 1:
             raise Exception("Field values data (f) should be 1D")
-        if self.x.shape[0] < self.x.shape[1]:
-            warnings.warn("Dimension of domain exceeds number of data points"
-                          " consider transposing x.")
+        if self.x.ndim > 1:
+            if self.x.shape[0] < self.x.shape[1]:
+                warnings.warn("Dimension of domain exceeds number of data"
+                    " points, check that each point is described by row")
+        if np.any(np.iscomplex(self.x)):
+            raise Exception("Complex numbers not taken in spatial data")
+        if np.any(np.iscomplex(self.f)):
+            raise Exception("Complex numbers not taken in field values")
 
     def cond_init(self):
         """
@@ -340,7 +344,7 @@ class Variogram:
         self.f = np.asarray(self.f)
 
         if self.x.ndim < 2:
-            self.x = self.x.reshape(x.size,1)
+            self.x = self.x.reshape(self.x.size,1)
 
 
 
