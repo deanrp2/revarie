@@ -13,7 +13,52 @@ class FuncVariogram:
     of ways.
 
     """
-    def __init__(self, method, d, dform, rang):
+    def __init__(self,
+                 source,
+                 method,
+                 options,
+                 *args, **kwargs):
+
+        self.source = source
+        self.method = method
+
+
+        if source == "func":
+            self.range = (-np.inf, np.inf)
+
+            if method == "ufunc":
+                self.f = options[0]
+            else:
+
+                if method == "sph":
+                    f = spherical
+                elif method == "exp":
+                    f = exponential
+                elif method == "gaus":
+                    f = gaussian
+
+                _f = lambda *a : f(*a[::-1])
+                self.f = partial(_f, *options[::-1])
+
+        elif source == "fit":
+            if len(options) == 4:
+                self.range = options[3]
+            else:
+                self.range = (np.min(options[0]), np.max(options[0]))
+
+            h = options[0]
+            v = options[1]
+
+            if method == "interp":
+                self.f = self.interp(h, v, options[2], *args, **kwargs)
+            elif method == "poly":
+                self.f = self.polyfit(h, v, options[2], *args, **kwargs)
+            elif method == "bmodel":
+                self.f = self.bmodel_fit(h, v, options[2], *args, **kwargs)
+            elif method == "umodel":
+                self.f = self.umodel_fit(h, v, options[2], *args, **kwargs)
+
+
         #need to put in some way to check extrpolation
         self.range = rang
         #self.extra = extrapolation
@@ -37,7 +82,7 @@ class FuncVariogram:
 
         return f
 
-    def bmodel(self, h, v, model, *args, **kwargs):
+    def bmodel_fit(self, h, v, model, *args, **kwargs):
         """
         Current avaliable models = sph, exp, gaus
         """
@@ -48,17 +93,13 @@ class FuncVariogram:
         elif model == "gaus":
             m = gaussian
 
-        return self.umodel(h, v, m, *args, **kwargs)
+        return self.umodel_fit(h, v, m, *args, **kwargs)
 
 
-    def umodel(self, h, v, f, *args, **kwargs):
+    def umodel_fit(self, h, v, f, *args, **kwargs):
         opts, _ = curve_fit(f, h, v, *args, **kwargs)
         _f = lambda *a : f(*a[::-1])
         return partial(_f, *opts[::-1])
-
-
-
-
 
     def echeck(self, x):
         if not self.extra:
