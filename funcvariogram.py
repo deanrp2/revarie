@@ -37,7 +37,7 @@ class FuncVariogram:
 
         return f
 
-    def tmodel(self, h, v, model, *args, **kwargs):
+    def bmodel(self, h, v, model, *args, **kwargs):
         """
         Current avaliable models = sph, exp, gaus
         """
@@ -48,11 +48,14 @@ class FuncVariogram:
         elif model == "gaus":
             m = gaussian
 
-        args, _ = curve_fit(m, h, v, *args, **kwargs)
+        return self.umodel(h, v, m, *args, **kwargs)
 
-        _m = lambda *a : m(*a[::-1])
 
-        return partial(_m, *args[::-1])
+    def umodel(self, h, v, f, *args, **kwargs):
+        opts, _ = curve_fit(f, h, v, *args, **kwargs)
+        _f = lambda *a : f(*a[::-1])
+        return partial(_f, *opts[::-1])
+
 
 
 
