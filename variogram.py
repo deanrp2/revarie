@@ -56,7 +56,7 @@ class Variogram:
 
     def _c_matheron(f):
         @functools.wraps(f)
-        def wrapper(self, bin_type, bins, var):
+        def wrapper(self, bin_type = "auto", bins = 10, var = False):
             if bin_type == "auto":
                 if not int(bins) == bins:
                     raise Exception("Number of bins not correctly castable to"
@@ -72,6 +72,9 @@ class Variogram:
                 if int(bins[2]) != bins[2]:
                     raise Exception("Number of bins not correctly castable to"
                             " int")
+            else:
+                raise Exception("Not known bin type, either auto, bound or li"
+                    "n.")
 
             return f(self, bin_type, bins, var)
         return wrapper
