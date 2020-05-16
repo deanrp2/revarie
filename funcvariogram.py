@@ -1,3 +1,5 @@
+#TODO: make extrapolation errors
+
 import numpy as np
 import matplotlib.pyplot as plt
 import warnings
@@ -24,7 +26,7 @@ class FuncVariogram:
 
 
         if source == "func":
-            self.range = (-np.inf, np.inf)
+            self.irange = (-np.inf, np.inf)
 
             if method == "ufunc":
                 self.f = options[0]
@@ -40,11 +42,11 @@ class FuncVariogram:
                 _f = lambda *a : f(*a[::-1])
                 self.f = partial(_f, *options[::-1])
 
-        elif source == "fit":
+        elif source == "data":
             if len(options) == 4:
-                self.range = options[3]
+                self.irange = options[3]
             else:
-                self.range = (np.min(options[0]), np.max(options[0]))
+                self.irange = (np.min(options[0]), np.max(options[0]))
 
             h = options[0]
             v = options[1]
@@ -57,16 +59,6 @@ class FuncVariogram:
                 self.f = self.bmodel_fit(h, v, options[2], *args, **kwargs)
             elif method == "umodel":
                 self.f = self.umodel_fit(h, v, options[2], *args, **kwargs)
-
-
-        #need to put in some way to check extrpolation
-        self.range = rang
-        #self.extra = extrapolation
-        #method: interp, polyfit, modelfit, umodelfit, gp???
-        #dform: matheron, cloud
-        #we need self.f and metadata (methd)
-        #need range for extrapolation error
-        #returned functions need to always check for extrapolation error
 
     def interp(self, h, v, kind, *args, **kwargs):
         """
