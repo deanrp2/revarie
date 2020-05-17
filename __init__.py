@@ -1,5 +1,5 @@
 from .variogram import Variogram
 from .revarie import Revarie
-from .funcvariogram import FuncVariogram
+from .funcvariogram import *
 from .__version__ import *
 
