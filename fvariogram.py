@@ -3,24 +3,41 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import warnings
-from functools import partial
+from functools import partial, wraps
 from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit
-from .models import *
+from .models import * #mtags variable comes from here
 
+def _fvariogram(f):
+    @wraps(f)
+    def wrapper(source, method, options, *args, **kwargs):
+        if source == "func":
+            if method == "ufunc":
+                pass
+            elif method in mtags.keys():
+                pass
+            else:
+                n = ",".join(["'{g}', ".format(g=h) for h in mtags.keys()])
+                raise Exception("Method argument for 'func' source sould be "
+                    "either 'ufunc' for user specified function or one of the"
+                    "built-in models: " + n
+        elif source == "data":
+            pass
+        else:
+            raise Exception("{s} is not a valid value for source parameter,"
+                " only 'func' and 'data' are acceptable".format(s=source))
+
+        return f(source, method, options, *args, **kwargs)
+    return wrapper
+
+
+@_fvariogram
 def fvariogram(source, method, options, *args, **kwargs):
     if source == "func":
         if method == "ufunc":
             return options[0]
         else:
-
-            if method == "sph":
-                f = spherical
-            elif method == "exp":
-                f = exponential
-            elif method == "gaus":
-                f = gaussian
-
+            f = mtags[method]
             _f = lambda *a : f(*a[::-1])
             return partial(_f, *options[::-1])
 
@@ -55,13 +72,7 @@ def bmodel_fit(h, v, model, *args, **kwargs):
     """
     Current avaliable models = sph, exp, gaus
     """
-    if model == "sph":
-        m = spherical
-    elif model == "exp":
-        m = exponential
-    elif model == "gaus":
-        m = gaussian
-
+    m = mtags[model]
     return umodel_fit(h, v, m, *args, **kwargs)
 
 
