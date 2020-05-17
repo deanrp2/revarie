@@ -13,14 +13,37 @@ def _fvariogram(f):
     def wrapper(source, method, options, *args, **kwargs):
         if source == "func":
             if method == "ufunc":
-                pass
+                if not isinstance(options, list) and callable(options):
+                    warnings.warn("User-defined function defined in options"
+                        " parameter being reformatted as a single element "
+                        "list, it is recommended that the user simply enclose"
+                        "user-function in list before passing as argument to "
+                        "options parameter.")
+                    options = [options]
+                if len(options) > 1:
+                    raise Exception("User-defined function can only take one "
+                        "argument, h")
+                try:
+                    res = options[0](np.zeros(4))
+                except:
+                    raise Exception("Lags will be passed as numpy array to u"
+                        "ser-defined function")
+                if not res is np.ndarray:
+                    raise Exception("return type of user-defined function sh"
+                        " ould be a numpy array")
+
             elif method in mtags.keys():
-                pass
+                try:
+                    mtags[method](*([0] + options))
+                except:
+                    raise Exception("options parameter not of proper length "
+                        "to fill *args of selected built-in model")
             else:
-                n = ",".join(["'{g}', ".format(g=h) for h in mtags.keys()])
+                n = ",".join(["'{g}'".format(g=h) for h in mtags.keys()])
                 raise Exception("Method argument for 'func' source sould be "
                     "either 'ufunc' for user specified function or one of the"
-                    "built-in models: " + n
+                    " built-in models: " + n)
+
         elif source == "data":
             pass
         else:
