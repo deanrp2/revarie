@@ -1,5 +1,9 @@
 import numpy as np
 
+mtags = {"sph" : spherical,
+        "exp" : exponential,
+        "gaus" : gaussian}
+
 def spherical(h, nug, sill, rang):
     variogram = nug + sill*np.piecewise(h, [h <= rang,  h > rang],[lambda h: 1.5*(h/rang)-0.5*(h/rang)**3,1])
     return variogram
