@@ -44,8 +44,15 @@ def _fvariogram(f):
                     "either 'ufunc' for user specified function or one of the"
                     " built-in models: " + n)
 
-        elif source == "data":
-            pass
+        elif source == "data": #left off here
+            if method == "poly":
+                pass
+            elif method == "interp":
+                pass
+            elif method == "bmodel":
+                pass
+            elif method == "umodel":
+                pass
         else:
             raise Exception("{s} is not a valid value for source parameter,"
                 " only 'func' and 'data' are acceptable".format(s=source))
