@@ -27,7 +27,8 @@ def _fvariogram(f):
                     res = options[0](np.zeros(4))
                 except:
                     raise Exception("Lags will be passed as numpy array to u"
-                        "ser-defined function")
+                        "ser-defined function. User-defined functions also m"
+                        "ust only take one argument")
                 if not res is np.ndarray:
                     raise Exception("return type of user-defined function sh"
                         " ould be a numpy array")
@@ -50,7 +51,9 @@ def _fvariogram(f):
             elif method == "interp":
                 pass
             elif method == "bmodel":
-                pass
+                if options[2] not in mtags.keys():
+                    raise Exception("{g} not valid parameter for built-in mod"
+                        "el".format(g = options[2])
             elif method == "umodel":
                 pass
         else:
@@ -63,6 +66,13 @@ def _fvariogram(f):
 
 @_fvariogram
 def fvariogram(source, method, options, *args, **kwargs):
+    """
+    Function intended to make generating python functions to describe
+    variograms easy. This function can be used to access the built-in models
+    as well as fit around user-defined models. Functionality includes fitting
+    variograms to built-in and user-defined models, interpolation and 
+    polynomial fitting.
+    """
     if source == "func":
         if method == "ufunc":
             return options[0]
