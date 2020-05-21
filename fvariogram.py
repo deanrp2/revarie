@@ -67,11 +67,58 @@ def _fvariogram(f):
 @_fvariogram
 def fvariogram(source, method, options, *args, **kwargs):
     """
-    Function intended to make generating python functions to describe
+    *Function intended to make generating python functions to describe
     variograms easy. This function can be used to access the built-in models
     as well as fit around user-defined models. Functionality includes fitting
-    variograms to built-in and user-defined models, interpolation and 
-    polynomial fitting.
+    variograms to built-in and user-defined models, interpolation and
+    polynomial fitting. Put simply, can take a wide range of parameters to
+    describe how a function is made that gives variogram as a function of
+    distance. Then, returns that function.
+
+    Parameters
+    ----------
+    source : str
+        Descriptor of the general approach used for the variogram model. Can
+        be one of:
+            * "func" : it is desired to return either a user-defined
+                function, or a built-in function with specified parameters.
+                This is not the option to select if any sort of fitting is
+                desired. See below.
+            * "data" : a model will be fit to data that is provided in the
+                "options" parameter according to a method given in the
+                "method" parameter.
+    method : str
+        Secondary descriptor which depends on the route selected in the source
+        parameter. If "func" was selected, can be one of:
+            * "ufunc" : user-specified python function object that takes
+                numpy array of lag values and returns variogram values.Should
+                only take a single object.
+            * built-in model : pass a string of any tag associated with a
+                built-in model to use that model with parameters specified
+                later in the "options" parameter.
+
+        If "data" is selected, can be one of:
+            * "poly" : uses numpy polynomial fit tool to fit a polynomial to
+                data provided later in the "options" parameter
+            * "interp" : uses the scipy interpolate tools to interpolate data
+                provided later in the "options" parameter
+            * "bmodel" : fits the data provided in the "options" parameter to
+                one of the built-in models using nonlinear least squares
+            * "umodel" : fits the data provided in the "options" parameter to
+                a user-defined function with an arbitrary number of arguments
+                using nonlinear least squares. If values of the arguments are
+                known, consider using the source = "func" route because this
+                method will fit function parameters to provided data.
+    options : list
+        List of data needed for the options selected in the previous
+        parameters. Descriptions of the content of these lists are given
+        below:
+            * "func" -> "ufunc" : [<userfunction>]
+                <userfunction> user-defined function to be called with
+                an array of lags as input that returns an array of variogram
+                values.
+            * "func" -> built-in model : *parms
+                list of parameters to be passed directly to !!!!!
     """
     if source == "func":
         if method == "ufunc":
@@ -109,9 +156,6 @@ def polyfit(h, v, order, *args, **kwargs):
     return f
 
 def bmodel_fit(h, v, model, *args, **kwargs):
-    """
-    Current avaliable models = sph, exp, gaus
-    """
     m = mtags[model]
     return umodel_fit(h, v, m, *args, **kwargs)
 
