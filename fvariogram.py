@@ -1,4 +1,5 @@
 #TODO: make extrapolation errors
+#TODO: give user option of returning optimized parameters
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -31,7 +32,7 @@ def _fvariogram(f):
                         "ust only take one argument")
                 if not res is np.ndarray:
                     raise Exception("return type of user-defined function sh"
-                        " ould be a numpy array")
+                        "ould be a numpy array")
 
             elif method in mtags.keys():
                 try:
@@ -68,9 +69,9 @@ def _fvariogram(f):
 def fvariogram(source, method, options, *args, **kwargs):
     """
     *Function intended to make generating python functions to describe
-    variograms easy. This function can be used to access the built-in models
-    as well as fit around user-defined models. Functionality includes fitting
-    variograms to built-in and user-defined models, interpolation and
+    variograms centralized. This function can be used to access the built-in
+    odels as well as fit around user-defined models. Functionality includes
+    fitting variograms to built-in and user-defined models, interpolation and
     polynomial fitting. Put simply, can take a wide range of parameters to
     describe how a function is made that gives variogram as a function of
     distance. Then, returns that function.
@@ -117,8 +118,45 @@ def fvariogram(source, method, options, *args, **kwargs):
                 <userfunction> user-defined function to be called with
                 an array of lags as input that returns an array of variogram
                 values.
-            * "func" -> built-in model : *parms
-                list of parameters to be passed directly to !!!!!
+            * "func" -> built-in model : [*args, **kwargs]
+                list of parameters to be passed directly to the selected
+                built-in model
+            * "data" -> "poly" : [<h>, <v>, <order>, *args, **kwargs]
+                <h> array of lag values to fit polynomial to
+                <v> array of variogram values to fit polynomial to
+                <order> order of polynomial for fitting as int
+                *args, **kwargs are passed directly to numpy.polyfit
+            * "data" -> "interp" : [<h>, <v>, <kind>, *args, **kwargs]
+                <h> array of lag values to use for interpolation
+                <v> array of variogram values to use for interpolation
+                <kind> str to specify how interpolation is performed, options
+                include: "linear", "nearest", "zero", "slinear", "quadratic",
+                "cubic", "previous" or "next". See scipy.interpolate.interp1d
+                for more details
+                *args, **kwargs are passed to scipy.interpolate.interp1d
+            * "data" -> "bmodel" : [<h>, <v>, <model tag>, *args, **kwargs]
+                <h> array of lag values to fit model to
+                <v> array of variogram values to fit model to
+                <model tag> string specifying which of the built in models to
+                fit
+                *args, **kwargs are passed to scipy.optimize.curve_fit
+            * "data" -> "umodel" : [<h>, <v>, <user func>, *args, **kwargs]
+                <h> array of lag values to fit model to
+                <v> array of variogram values to fit model to
+                <user func> function object of to use for fitting, first arg
+                must be lag values. Following arguments will be found using
+                scipy.optimize.curve_fit
+                *args, **kwargs are passed to scipy.optimize.curve_fit
+
+            Returns
+            -------
+            fvariogram : function
+                Callable function to be used in later variogram calculations.
+                All returned functions will take one argument, lag distance h
+                as an array. The return type of all returned functions will be
+                an array of returned variogram values at each of those lag
+                distances.
+
     """
     if source == "func":
         if method == "ufunc":
@@ -143,11 +181,14 @@ def fvariogram(source, method, options, *args, **kwargs):
 
 def interp(h, v, kind, *args, **kwargs):
     """
-    Highl reccomended that copy=False is used
+    See "data" -> "interp" above
     """
     return interp1d(h, v, kind, *args, **kwargs)
 
 def polyfit(h, v, order, *args, **kwargs):
+    """
+    See "data" -> "poly" above
+    """
     P = np.polyfit(h,v,order, *args, **kwargs)
 
     def f(h):
@@ -156,11 +197,17 @@ def polyfit(h, v, order, *args, **kwargs):
     return f
 
 def bmodel_fit(h, v, model, *args, **kwargs):
+    """
+    See "data" -> "bmodel" above
+    """
     m = mtags[model]
     return umodel_fit(h, v, m, *args, **kwargs)
 
 
 def umodel_fit(h, v, f, *args, **kwargs):
+    """
+    See "data" -> "umodel" above
+    """
     opts, _ = curve_fit(f, h, v, *args, **kwargs)
     _f = lambda *a : f(*a[::-1])
     return partial(_f, *opts[::-1])
