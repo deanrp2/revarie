@@ -1,4 +1,5 @@
 #TODO: make extrapolation errors
+#TODO: Check for validity of variogram
 #TODO: give user option of returning optimized parameters
 
 import numpy as np
