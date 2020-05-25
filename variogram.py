@@ -151,6 +151,11 @@ class Variogram:
         elif bin_type == "auto":
             return np.linspace(self.range[0],self.range[1]/2,int(bins)+1)
 
+    def to_function(self, data, method, options, *args, **kwargs):
+
+        if data == "cloud":
+            return 
+
     def calc_lags(self):
         """
         Upon initialization, calculates distances between all points given in
