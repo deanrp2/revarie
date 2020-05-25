@@ -1,6 +1,7 @@
 #TODO: make extrapolation errors
 #TODO: Check for validity of variogram
 #TODO: give user option of returning optimized parameters
+#TODO: func->ufunc let user pass parameters
 
 import numpy as np
 import matplotlib.pyplot as plt
