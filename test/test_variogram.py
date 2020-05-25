@@ -1,5 +1,4 @@
 import unittest
-from numpy.testing import assert_array_almost_equal
 from revarie import Variogram
 import numpy as np
 import itertools
