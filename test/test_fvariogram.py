@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 
 class TestFVariogram(unittest.TestCase):
     def test_poly(self):
+        """
+        Test accuracy of polyfit
+        """
         x = np.linspace(0,10,100)
 
         for n in range(2,8):
@@ -17,6 +20,9 @@ class TestFVariogram(unittest.TestCase):
             self.assertTrue(np.allclose(y, fit(x)))
 
     def test_lin_interp(self):
+        """
+        Test accuracy of linear interpolation
+        """
         x = np.linspace(0,10,100)
         y = .04*x
 
@@ -26,6 +32,9 @@ class TestFVariogram(unittest.TestCase):
         self.assertTrue(np.allclose(y, fit(x)))
 
     def test_near_interp(self):
+        """
+        Test accuracy of nearest interploation
+        """
         x = np.linspace(0,10,100)
         def f(x):
             return x**2 + x * np.sin(x)
@@ -40,6 +49,9 @@ class TestFVariogram(unittest.TestCase):
         self.assertTrue(np.allclose(f(xnearest), fit(xnew)))
 
     def test_bmodel(self):
+        """
+        Test accuracy of built-in model fitting
+        """
         x = np.linspace(0,10,100)
         y = spherical(x, .2, 4, 6)
 
@@ -50,6 +62,9 @@ class TestFVariogram(unittest.TestCase):
         self.assertTrue(np.allclose(y, fit(x)))
 
     def test_umodel(self):
+        """
+        Test accuracy of user-specified model fitting
+        """
         def u(x, v, h):
             return v*np.sqrt(h*x)
 
@@ -63,6 +78,9 @@ class TestFVariogram(unittest.TestCase):
         self.assertTrue(np.allclose(y, fit(x)))
 
     def test_ufuncs(self):
+        """
+        Test accuracy of user-specified function specification
+        """
         def u(x):
             return np.sqrt(x)
 
@@ -75,6 +93,9 @@ class TestFVariogram(unittest.TestCase):
         self.assertTrue(np.allclose(yu, ufit(x)))
 
     def test_bfuncs(self):
+        """
+        Test accuracy of built-in function specification
+        """
         x = np.linspace(0,10,100)
         yb = spherical(x,.2, 4, 6)
 
