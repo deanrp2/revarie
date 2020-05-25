@@ -14,7 +14,7 @@ def _fvariogram(f):
     @wraps(f)
     def wrapper(source, method, options, *args, **kwargs):
         if source == "func":
-            if method == "ufunc":
+            if method == "ufunc":#should run model validity tests here as well
                 if not isinstance(options, list) and callable(options):
                     warnings.warn("User-defined function defined in options"
                         " parameter being reformatted as a single element "
@@ -55,9 +55,9 @@ def _fvariogram(f):
             elif method == "bmodel":
                 if options[2] not in mtags.keys():
                     raise Exception("{g} not valid parameter for built-in mod"
-                        "el".format(g = options[2])
+                        "el".format(g = options[2]))
             elif method == "umodel":
-                pass
+                pass #this is where we should run validity tests AFTER fitting
         else:
             raise Exception("{s} is not a valid value for source parameter,"
                 " only 'func' and 'data' are acceptable".format(s=source))
