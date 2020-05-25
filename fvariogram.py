@@ -32,9 +32,6 @@ def _fvariogram(f):
                     raise Exception("Lags will be passed as numpy array to u"
                         "ser-defined function. User-defined functions also m"
                         "ust only take one argument")
-                if not res is np.ndarray:
-                    raise Exception("return type of user-defined function sh"
-                        "ould be a numpy array")
 
             elif method in mtags.keys():
                 try:
