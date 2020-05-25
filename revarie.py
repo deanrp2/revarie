@@ -5,7 +5,7 @@ from  scipy.spatial.distance import pdist
 from .models import *
 
 class Revarie:
-    def __init__(self, x, mu, , model):
+    def __init__(self, x, mu, model):
         self.mu = mu
         self.nug = nug
         self.sill = sill
