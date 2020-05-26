@@ -5,6 +5,8 @@ from numpy_indexed import group_by
 import functools
 import warnings
 
+from .fvariogram import fvariogram
+
 class Variogram:
     """
 
@@ -154,7 +156,13 @@ class Variogram:
     def to_function(self, data, method, options, *args, **kwargs):
 
         if data == "cloud":
-            return 
+            l = self.lags
+            d = self.diffs
+        elif data == "matheron"
+            return fvariogram(source = "data",
+                              method = method,
+                              options = [self.lags, self.diffs] + options,
+                              *args, **kwargs)
 
     def calc_lags(self):
         """
