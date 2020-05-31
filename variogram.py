@@ -351,18 +351,3 @@ class Variogram:
         if self.x.ndim < 2:
             self.x = self.x.reshape(self.x.size,1)
 
-
-
-if __name__ == "__main__":
-    x = np.random.uniform(0,np.pi,(10,2))
-    f = np.sin(x[:,0])
-
-    test = Variogram(x,f)
-    print(test.diffs)
-    #centers, n, v, v_var = test.matheron("lin", [0,np.pi,20], True)
-
-    #plt.plot(centers, v, "k.")
-    #plt.plot(centers, v + v_var, "b--")
-    #plt.plot(centers, v - v_var, "b--")
-    #plt.show()
-
