@@ -83,13 +83,3 @@ class Revarie:
                     "efined in model input parameter. Should return numpy arr"
                     "ay as well")
 
-        if self.x.shape[0] < self.x.shape[1]:
-            warnings.warn("Dimension of coordinates is larger than number of"
-                    " points specified. Each row in 'x' input parameter shoul"
-                    "d correspond to a single coordinate.")
-
-
-
-
-
-
