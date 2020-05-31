@@ -115,32 +115,39 @@ def fvariogram(source, method, options, *args, **kwargs):
             * "func" -> built-in model : [*args, **kwargs]
                 list of parameters to be passed directly to the selected
                 built-in model
-            * "data" -> "poly" : [<h>, <v>, <order>, *args, **kwargs]
+            * "data" -> "poly" : [<h>, <v>, <order>]
                 <h> array of lag values to fit polynomial to
                 <v> array of variogram values to fit polynomial to
                 <order> order of polynomial for fitting as int
-                *args, **kwargs are passed directly to numpy.polyfit
-            * "data" -> "interp" : [<h>, <v>, <kind>, *args, **kwargs]
+            * "data" -> "interp" : [<h>, <v>, <kind>]
                 <h> array of lag values to use for interpolation
                 <v> array of variogram values to use for interpolation
                 <kind> str to specify how interpolation is performed, options
                 include: "linear", "nearest", "zero", "slinear", "quadratic",
                 "cubic", "previous" or "next". See scipy.interpolate.interp1d
                 for more details
-                *args, **kwargs are passed to scipy.interpolate.interp1d
-            * "data" -> "bmodel" : [<h>, <v>, <model tag>, *args, **kwargs]
+            * "data" -> "bmodel" : [<h>, <v>, <model tag>]
                 <h> array of lag values to fit model to
                 <v> array of variogram values to fit model to
                 <model tag> string specifying which of the built in models to
                 fit
-                *args, **kwargs are passed to scipy.optimize.curve_fit
-            * "data" -> "umodel" : [<h>, <v>, <user func>, *args, **kwargs]
+            * "data" -> "umodel" : [<h>, <v>, <user func>]
                 <h> array of lag values to fit model to
                 <v> array of variogram values to fit model to
                 <user func> function object of to use for fitting, first arg
                 must be lag values. Following arguments will be found using
                 scipy.optimize.curve_fit
-                *args, **kwargs are passed to scipy.optimize.curve_fit
+        *args/**kwargs
+            Extra parameters to be passed into external functions for fitting
+            or interpolation
+                * "data" -> "poly"
+                    Passed into numpy.polyfit function
+                * "data" -> "interp"
+                    Passed into the scipy.interpolate function
+                * "data" -> "bmodel"
+                    Passed into scipy.curve_fit
+                * "data" -> "umodel"
+                    Passed into scipy.curve_fit
 
             Returns
             -------
