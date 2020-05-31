@@ -10,7 +10,7 @@ def _fvariogram(f):
     @wraps(f)
     def wrapper(source, method, options, *args, **kwargs):
         if source == "func":
-            if method == "ufunc":#should run model validity tests here as well
+            if method == "ufunc":
                 if not isinstance(options, list) and callable(options):
                     warnings.warn("User-defined function defined in options"
                         " parameter being reformatted as a single element "
@@ -40,7 +40,7 @@ def _fvariogram(f):
                     "either 'ufunc' for user specified function or one of the"
                     " built-in models: " + n)
 
-        elif source == "data": #left off here
+        elif source == "data":
             if method == "poly":
                 pass
             elif method == "interp":
