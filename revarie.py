@@ -37,9 +37,9 @@ class Revarie:
 
         self.check_init()
 
-        self.genf(x, model)
+        self.calc_cov(x, model)
 
-    def genf(self, x, model):
+    def calc_cov(self, x, model):
         """
         Creates the covariance matrix for the points with the variogram model
         """
@@ -56,7 +56,7 @@ class Revarie:
 
         self.cov = np.maximum(h_cov,h_cov.T)
 
-    def mnorm(self):
+    def genf(self):
         """
         Generates random field values using covariance matrix calculated
         previously.
