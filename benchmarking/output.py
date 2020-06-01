@@ -23,10 +23,16 @@ def write(n, t, fname, typ):
     out.write("% --- Test Info\n")
     out.write("Test Date/Time:".ljust(24) + str(datetime.now()) + "\n")
     out.write("Test Type:".ljust(24) + typ + "\n")
-    out.write("Nrange:".ljust(24) + str(n.min()) + "-" + str(n.max()))
+    mn = "%.2E"%n.min()
+    mx = "%.2E"%n.max()
+    out.write("Nrange:".ljust(24) + mn + "-" + mx + "\n")
+    out.write("Total Runtime:".ljust(24) + str(t.sum()) + " s")
 
     out.write("\n\n% --- Timing Data\n")
-    #for x1, x2 in zip(
+    out.write("n             t[s]\n")
+    for x1, x2 in zip(n, t):
+        out.write(("%.5E"%x1).ljust(14))
+        out.write("%.10E\n"%x2)
 
 
 if __name__ == "__main__":
