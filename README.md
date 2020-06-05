@@ -1,5 +1,5 @@
 <p align="center">
-<img src="docs/logo/logo.png" height="200px">
+<img src="docs/logo/logo.png" height="150px">
 </p>
 
 # Revarie
