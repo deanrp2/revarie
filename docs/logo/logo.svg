@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="125.17533mm"
+   height="30.188675mm"
+   viewBox="0 0 125.17533 30.188673"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="logo.svg">
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient870"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#92009d;stop-opacity:0;"
+         offset="0"
+         id="stop876" />
+      <stop
+         style="stop-color:#92009d;stop-opacity:1;"
+         offset="1"
+         id="stop874" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient870"
+       id="linearGradient872"
+       x1="62.284069"
+       y1="91.56295"
+       x2="158.58737"
+       y2="91.56295"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.050851,0,0,0.75135869,-33.731476,26.986868)" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8"
+     inkscape:cx="252.05585"
+     inkscape:cy="68.190981"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer2"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:snap-text-baseline="true"
+     inkscape:pagecheckerboard="false"
+     inkscape:snap-nodes="false" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline"
+     transform="translate(-28.91532,-79.726155)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.75569153px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:discretionary-ligatures;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#28170b;fill-opacity:1;stroke:none;stroke-width:0.42453846"
+       x="26.470659"
+       y="109.35761"
+       id="text817"><tspan
+         sodipodi:role="line"
+         x="26.470659"
+         y="109.35761"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.75569153px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:discretionary-ligatures;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#28170b;stroke-width:0.42453846"
+         id="tspan819"><tspan
+           style="fill:#ffffff"
+           id="tspan1474">R</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.75641632px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';font-variant-ligatures:discretionary-ligatures;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start"
+           id="tspan855">evarie</tspan></tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="idot_cover"
+     style="display:inline"
+     transform="translate(-28.91532,-79.726155)" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="graphic"
+     style="display:inline"
+     transform="translate(-28.91532,-79.726155)">
+    <path
+       style="fill:none;stroke:url(#linearGradient872);stroke-width:3.06880546;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       d="m 31.44322,108.00128 c 0,0 14.348015,-23.060715 38.503068,-23.060715 h 56.794372 c 0,0 1.60746,2.81296 4.08242,2.768613 2.47496,-0.04435 3.96654,-2.768613 3.96654,-2.768613 h 19.30103"
+       id="path824"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccczcc" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="lone_R"
+     style="display:inline"
+     transform="translate(-28.91532,-79.726155)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.75569153px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:discretionary-ligatures;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#28170b;fill-opacity:1;stroke:none;stroke-width:0.42453849"
+       x="28.2188"
+       y="109.6411"
+       id="text817-6"><tspan
+         sodipodi:role="line"
+         x="28.2188"
+         y="109.6411"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.75641632px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';font-variant-ligatures:discretionary-ligatures;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#28170b;stroke-width:0.42453849"
+         id="tspan819-3">R</tspan><tspan
+         sodipodi:role="line"
+         x="28.2188"
+         y="161.59303"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.75569153px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:discretionary-ligatures;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#28170b;stroke-width:0.42453849"
+         id="tspan1472" /></text>
+  </g>
+</svg>
