@@ -1,2 +1,2 @@
-from .standard import bench_variogram
+from .standard import *
 from .output import write
