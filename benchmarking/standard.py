@@ -8,6 +8,17 @@ from .output import write
 from pathlib import Path
 
 def bench_variogram(tlimit = 15, path = "."):
+    """
+    Run timing benchmark test for variogram class. Results are formatted and
+    printed to a file named "variogram_timing###.dat".
+
+    Parameters
+    ----------
+    tlimit : float
+        Approximate wall time limit for tests to run.
+    path : str, path-like
+        Path for results file to be printed to
+    """
     tot_time = time.time()
 
     n = 50
@@ -32,6 +43,17 @@ def bench_variogram(tlimit = 15, path = "."):
     write(np.asarray(ns),np.asarray(ts),Path(path) / fname,"Variogram", "1-D")
 
 def bench_revarie(tlimit = 15, path = "."):
+    """
+    Run timing benchmark test for revarie class. Results are formatted and
+    printed to a file named "revarie_timing###.dat".
+
+    Parameters
+    ----------
+    tlimit : float
+        Approximate wall time limit for tests to run.
+    path : str, path-like
+        Path for results file to be printed to
+    """
     tot_time = time.time()
 
     nug = 0
@@ -62,6 +84,18 @@ def bench_revarie(tlimit = 15, path = "."):
     write(np.asarray(ns),np.asarray(ts),Path(path) / fname,"Revarie", "1-D")
 
 def suite(tlimit = 30, path = "."):
+    """
+    Run timing benchmark test for both the revarie and variogram classes.
+    Results are formatted and printed to a file named "revarie_timing###.dat".
+    Each benchmark is run with equal time division for each object.
+
+    Parameters
+    ----------
+    tlimit : float
+        Approximate wall time limit for tests to run.
+    path : str, path-like
+        Path for results files to be printed to
+    """
     bench_variogram(tlimit/2, path = path)
     bench_revarie(tlimit/2, path = path)
 
