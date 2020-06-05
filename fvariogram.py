@@ -18,14 +18,12 @@ def _fvariogram(f):
                         "user-function in list before passing as argument to "
                         "options parameter.")
                     options = [options]
-                if len(options) > 1:
-                    raise Exception("User-defined function can only take one "
-                        "argument, h")
-                try:
-                    res = options[0](np.zeros(4))
-                except:
-                    raise Exception("Lags will be passed as numpy array to u"
-                        "ser-defined function. User-defined functions also m"
+                if len(options) == 1:
+                    try:
+                        res = options[0](np.zeros(4))
+                    except:
+                        raise Exception("Lags will be passed as numpy array"
+                        "user-defined function. User-defined functions also m"
                         "ust only take one argument")
 
             elif method in mtags.keys():
@@ -108,10 +106,10 @@ def fvariogram(source, method, options, *args, **kwargs):
         List of data needed for the options selected in the previous
         parameters. Descriptions of the content of these lists are given
         below:
-            * "func" -> "ufunc" : [<userfunction>]
+            * "func" -> "ufunc" : [<userfunction>, *args, **kwargs]
                 <userfunction> user-defined function to be called with
                 an array of lags as input that returns an array of variogram
-                values.
+                values. Include extra args to function in *args and **kwargs.
             * "func" -> built-in model : [*args, **kwargs]
                 list of parameters to be passed directly to the selected
                 built-in model
