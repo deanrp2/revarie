@@ -4,6 +4,9 @@ import platform, subprocess
 from datetime import datetime, date
 
 def get_processor_info():
+    """
+    Simple function to get computer information output as a string
+    """
     if platform.system() == "Windows":
         r = platform.processor()
     elif platform.system() == "Linux":
@@ -12,9 +15,25 @@ def get_processor_info():
     return r.decode("utf-8")
 
 
-def write(n, t, fname, typ):
+def write(n, t, fname, typ, notes=False):
     """
-    typ should be "variogram" or "revarie"
+    Write results from benchmarking test to a file, also fits timing data to
+    an equation of the form: time = k*(n)**p.
+
+    Parameters
+    ----------
+    n : numpy array
+        Array containing number of data points used for each test simulation
+    t : numpy array
+        Array containing wall time of each test simulation
+    fname : str, path-like
+        String or path object containing path and file name for test results
+        to be printed
+    typ : str
+        "variogram" or "revarie", for which object it being
+        benchmarked. Can be abbreviated, written directly to test results file
+    notes : str
+        Any extra information to be printed in results file
     """
     out = open(fname, "w")
     #Write CPU information
@@ -28,6 +47,8 @@ def write(n, t, fname, typ):
     mn = "%.2E"%n.min()
     mx = "%.2E"%n.max()
     out.write("Nrange:".ljust(24) + mn + "-" + mx + "\n\n")
+    if notes:
+        out.write("Notes:".ljust(24) + notes + "\n")
 
     #Report fit to exponential of form t=k*n^p
     out.write("% --- Results Summary\n")
@@ -45,7 +66,7 @@ def write(n, t, fname, typ):
 
     #Write results from test
     out.write("\n\n% --- Timing Data\n")
-    out.write("n             t[s]\n")
+    out.write("n             Wall Time [s]\n")
     for x1, x2 in zip(n, t):
         out.write(("%.5E"%x1).ljust(14))
         out.write("%.10E\n"%x2)
