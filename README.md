@@ -1,5 +1,6 @@
-![](docs/logo/logo.png){:height="50%" width="50%"}
-
+<p align="center">
+<img src="docs/logo/logo.png" height="200px">
+</p>
 
 # Revarie
 Revarie is intended to be a spatial statistical analysis toolset which is targeted for computational physics applications.
