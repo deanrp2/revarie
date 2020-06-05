@@ -113,7 +113,7 @@ def fvariogram(source, method, options, *args, **kwargs):
             * "func" -> built-in model : [*args, **kwargs]
                 list of parameters to be passed directly to the selected
                 built-in model
-            * "data" -> "poly" : [<h>, <v>, <order>]
+            * "data" -> "poly" : [<h>, <v>, <opt>, <order>]
                 <h> array of lag values to fit polynomial to
                 <v> array of variogram values to fit polynomial to
                 <order> order of polynomial for fitting as int
@@ -124,17 +124,18 @@ def fvariogram(source, method, options, *args, **kwargs):
                 include: "linear", "nearest", "zero", "slinear", "quadratic",
                 "cubic", "previous" or "next". See scipy.interpolate.interp1d
                 for more details
-            * "data" -> "bmodel" : [<h>, <v>, <model tag>]
+            * "data" -> "bmodel" : [<h>, <v>, <model tag>, <opt>]
                 <h> array of lag values to fit model to
                 <v> array of variogram values to fit model to
                 <model tag> string specifying which of the built in models to
                 fit
-            * "data" -> "umodel" : [<h>, <v>, <user func>]
+                <opt> Optional if True, also returns optimized parameters
+            * "data" -> "umodel" : [<h>, <v>, <user func>, <opt>]
                 <h> array of lag values to fit model to
                 <v> array of variogram values to fit model to
                 <user func> function object of to use for fitting, first arg
-                must be lag values. Following arguments will be found using
-                scipy.optimize.curve_fit
+                must be lag values.
+                <opt> Optional, if True returns optimized parameters
         *args/**kwargs
             Extra parameters to be passed into external functions for fitting
             or interpolation
@@ -171,14 +172,17 @@ def fvariogram(source, method, options, *args, **kwargs):
         h = options[0]
         v = options[1]
 
+        if len(options) < 4:
+            options.append(False)#default to no optimized parameters return
+
         if method == "interp":
             return interp(h, v, options[2], *args, **kwargs)
         elif method == "poly":
-            return polyfit(h, v, options[2], *args, **kwargs)
+            return polyfit(h, v, options[2], options[3], *args, **kwargs)
         elif method == "bmodel":
-            return bmodel_fit(h, v, options[2], *args, **kwargs)
+            return bmodel_fit(h, v, options[2], options[3], *args, **kwargs)
         elif method == "umodel":
-            return umodel_fit(h, v, options[2], *args, **kwargs)
+            return umodel_fit(h, v, options[2], options[3], *args, **kwargs)
 
 def interp(h, v, kind, *args, **kwargs):
     """
@@ -186,7 +190,7 @@ def interp(h, v, kind, *args, **kwargs):
     """
     return interp1d(h, v, kind, *args, **kwargs)
 
-def polyfit(h, v, order, *args, **kwargs):
+def polyfit(h, v, order, opt, *args, **kwargs):
     """
     See "data" -> "poly" above
     """
@@ -195,20 +199,26 @@ def polyfit(h, v, order, *args, **kwargs):
     def f(h):
         return np.polyval(P, h)
 
-    return f
+    if opt:
+        return f, P
+    else:
+        return f
 
-def bmodel_fit(h, v, model, *args, **kwargs):
+def bmodel_fit(h, v, model, opt, *args, **kwargs):
     """
     See "data" -> "bmodel" above
     """
     m = mtags[model]
-    return umodel_fit(h, v, m, *args, **kwargs)
+    return umodel_fit(h, v, m, opt, *args, **kwargs)
 
 
-def umodel_fit(h, v, f, *args, **kwargs):
+def umodel_fit(h, v, f, opt, *args, **kwargs):
     """
     See "data" -> "umodel" above
     """
     opts, _ = curve_fit(f, h, v, *args, **kwargs)
     _f = lambda *a : f(*a[::-1])
-    return partial(_f, *opts[::-1])
+    if opt:
+        return partial(_f, *opts[::-1]), opts
+    else:
+        return partial(_f, *opts[::-1])
