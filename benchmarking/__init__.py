@@ -1,2 +1,2 @@
-import .output
-import .bench_variogram.py
+from .standard import bench_variogram
+from .output import write
