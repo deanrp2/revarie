@@ -1,4 +1,4 @@
-![](docs/logo/logo.png)
+![](docs/logo/logo.png|width=100)
 
 
 # Revarie
