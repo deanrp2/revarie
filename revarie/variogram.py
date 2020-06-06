@@ -347,7 +347,6 @@ class Variogram:
         """
         self.x = np.asarray(self.x)
         self.f = np.asarray(self.f)
-
         if self.x.ndim < 2:
             self.x = self.x.reshape(self.x.size,1)
 
