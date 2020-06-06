@@ -17,4 +17,4 @@ install:
   - source activate test-environment
   - pip install revarie
 script:
-  - pytest
+  - python -m pytest
