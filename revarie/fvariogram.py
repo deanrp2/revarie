@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import warnings
 from functools import partial, wraps
 from scipy.interpolate import interp1d

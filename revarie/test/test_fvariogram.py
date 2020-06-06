@@ -2,7 +2,6 @@ import unittest
 from revarie.fvariogram import *
 import numpy as np
 from revarie.models import *
-import matplotlib.pyplot as plt
 
 class TestFVariogram(unittest.TestCase):
     def test_poly(self):
