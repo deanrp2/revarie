@@ -12,8 +12,12 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pytest scipy numpy
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pytest-cov scipy numpy codecov
   - source activate test-environment
   - pip install revarie
 script:
-  - python -m pytest
+  - python -m pytest-cov
+env:
+  - CODECOV_TOKEN="d31d6ede-84fc-4e44-bcb3-45c61fdc2a11"
+after_success:
+  - codecov
