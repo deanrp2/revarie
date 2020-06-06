@@ -14,7 +14,8 @@ install:
   - conda update -q conda
   - conda info -a
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy scipy
-  - source activate test-environment
+  - conda init
+  - conda activate test-environment
   - pip install revarie
 script:
   - pytest
