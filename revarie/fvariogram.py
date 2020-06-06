@@ -161,8 +161,11 @@ def fvariogram(source, method, options, *args, **kwargs):
     if source == "func":
         if method == "ufunc":
             f = options[0]
-            _f = lambda *a : f(*a[::-1])
-            return partial(_f, *options[1::-1])
+            if len(options) == 1:
+                return f
+            else:
+                _f = lambda *a : f(*a[::-1])
+                return partial(_f, *options[1::-1])
         else:
             f = mtags[method]
             _f = lambda *a : f(*a[::-1])
