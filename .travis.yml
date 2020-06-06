@@ -7,4 +7,4 @@ python:
 install:
   - pip install revarie
 script:
-  - python -m unittest discover revarie
+  - pytest
