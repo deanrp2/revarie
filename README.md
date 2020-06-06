@@ -3,6 +3,7 @@
 </p>
 
 [![Build Status](https://travis-ci.org/deanrp2/revarie.svg?branch=master)](https://travis-ci.org/deanrp2/revarie)
+![Codecov](https://img.shields.io/codecov/c/github/deanrp2/revarie)
 ![GitHub](https://img.shields.io/github/license/deanrp2/revarie)
 ![PyPI](https://img.shields.io/pypi/v/revarie)
 ![GitHub top language](https://img.shields.io/github/languages/top/deanrp2/revarie)
