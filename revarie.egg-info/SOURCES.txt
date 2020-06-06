@@ -1,8 +1,12 @@
+MANIFEST.in
 README.md
 setup.py
 benchmarking/__init__.py
 benchmarking/output.py
 benchmarking/standard.py
+docs/logo/logo.pdf
+docs/logo/logo.png
+docs/logo/logo.svg
 revarie.egg-info/PKG-INFO
 revarie.egg-info/SOURCES.txt
 revarie.egg-info/dependency_links.txt
