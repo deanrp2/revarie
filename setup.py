@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="revarie",
-    version="1.3.6",
+    version="1.3.7",
     description="Variogram manipulation and field generation toolbox",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -18,7 +18,6 @@ setup(
     author="Dean Price",
     author_email="deanrp@umich.edu",
     license="MIT",
-    include_package_data = True,
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
