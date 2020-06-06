@@ -1,5 +1,5 @@
 __pycache__/
 **.swp
 **.dat
-revarie.eff-info/*
+revarie.egg-info/*
 dist/*
