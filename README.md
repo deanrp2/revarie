@@ -1,5 +1,5 @@
 <p align="center">
-<img src="docs/logo/logo.png" height="120px">
+<img src="https://raw.githubusercontent.com/deanrp2/revarie/master/docs/logo/logo.png" height="120px">
 </p>
 
 # Overview
