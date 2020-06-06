@@ -1,0 +1,25 @@
+Metadata-Version: 2.1
+Name: revarie
+Version: 1.3.6
+Summary: Variogram manipulation and field generation toolbox
+Home-page: https://github.com/deanrp2/revarie
+Author: Dean Price
+Author-email: deanrp@umich.edu
+License: MIT
+Description: <p align="center">
+        <img src="docs/logo/logo.png" height="120px">
+        </p>
+        
+        # Overview
+        Revarie is intended to be a spatial statistical analysis toolset which is targeted for computational physics applications.
+        Its primary focus is on variography of cartesian fields. Currently, it supports computation and fitting of isotropic variograms along with other tools to support random field generation.
+        
+        # Variogram Calculation
+        
+        # Field Generation
+        
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Description-Content-Type: text/markdown

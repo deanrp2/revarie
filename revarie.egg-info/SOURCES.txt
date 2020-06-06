@@ -1,0 +1,14 @@
+README.md
+setup.py
+benchmarking/__init__.py
+benchmarking/output.py
+benchmarking/standard.py
+revarie.egg-info/PKG-INFO
+revarie.egg-info/SOURCES.txt
+revarie.egg-info/dependency_links.txt
+revarie.egg-info/requires.txt
+revarie.egg-info/top_level.txt
+test/__init__.py
+test/test_fvariogram.py
+test/test_revarie.py
+test/test_variogram.py
