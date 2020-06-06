@@ -87,10 +87,10 @@ class TestFVariogram(unittest.TestCase):
         x = np.linspace(0,10,100)
         yu = u(x)
 
-        ufit = fvariogram(source = "func",
-                          method = "ufunc",
+        ufunc = fvariogram(source = "func",
+                           method = "ufunc",
                           options = [u])
-        self.assertTrue(np.allclose(yu, ufit(x)))
+        self.assertTrue(np.allclose(yu, ufunc(x)))
 
     def test_bfuncs(self):
         """
