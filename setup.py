@@ -18,6 +18,7 @@ setup(
     author="Dean Price",
     author_email="deanrp@umich.edu",
     license="MIT",
+    include_package_data = True,
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
