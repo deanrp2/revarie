@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import warnings
 from functools import partial, wraps
 from scipy.interpolate import interp1d
@@ -161,8 +160,11 @@ def fvariogram(source, method, options, *args, **kwargs):
     if source == "func":
         if method == "ufunc":
             f = options[0]
-            _f = lambda *a : f(*a[::-1])
-            return partial(_f, *options[1::-1])
+            if len(options) == 1:
+                return f
+            else:
+                _f = lambda *a : f(*a[::-1])
+                return partial(_f, *options[1::-1])
         else:
             f = mtags[method]
             _f = lambda *a : f(*a[::-1])
