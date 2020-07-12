@@ -7,9 +7,9 @@ from .models import * #mtags variable comes from here
 
 def _fvariogram(f):
     @wraps(f)
-    def wrapper(source, method, options, *args, **kwargs):
+    def wrapper(source, methd, options, *args, **kwargs):
         if source == "func":
-            if method == "ufunc":
+            if methd == "ufunc":
                 if not isinstance(options, list) and callable(options):
                     warnings.warn("User-defined function defined in options"
                         " parameter being reformatted as a single element "
@@ -25,9 +25,9 @@ def _fvariogram(f):
                         "user-defined function. User-defined functions also m"
                         "ust only take one argument")
 
-            elif method in mtags.keys():
+            elif methd in mtags.keys():
                 try:
-                    mtags[method](*([0] + options))
+                    mtags[methd](*([0] + options))
                 except:
                     raise Exception("options parameter not of proper length "
                         "to fill *args of selected built-in model")
@@ -38,26 +38,26 @@ def _fvariogram(f):
                     " built-in models: " + n)
 
         elif source == "data":
-            if method == "poly":
+            if methd == "poly":
                 pass
-            elif method == "interp":
+            elif methd == "interp":
                 pass
-            elif method == "bmodel":
+            elif methd == "bmodel":
                 if options[2] not in mtags.keys():
                     raise Exception("{g} not valid parameter for built-in mod"
                         "el".format(g = options[2]))
-            elif method == "umodel":
+            elif methd == "umodel":
                 pass #this is where we should run validity tests AFTER fitting
         else:
             raise Exception("{s} is not a valid value for source parameter,"
                 " only 'func' and 'data' are acceptable".format(s=source))
 
-        return f(source, method, options, *args, **kwargs)
+        return f(source, methd, options, *args, **kwargs)
     return wrapper
 
 
 @_fvariogram
-def fvariogram(source, method, options, *args, **kwargs):
+def fvariogram(source, methd, options, *args, **kwargs):
     """
     *Function intended to make generating python functions to describe
     variograms centralized. This function can be used to access the built-in
@@ -78,8 +78,8 @@ def fvariogram(source, method, options, *args, **kwargs):
                 desired. See below.
             * "data" : a model will be fit to data that is provided in the
                 "options" parameter according to a method given in the
-                "method" parameter.
-    method : str
+                "methd" parameter.
+    methd : str
         Secondary descriptor which depends on the route selected in the source
         parameter. If "func" was selected, can be one of:
             * "ufunc" : user-specified python function object that takes
@@ -158,7 +158,7 @@ def fvariogram(source, method, options, *args, **kwargs):
 
     """
     if source == "func":
-        if method == "ufunc":
+        if methd == "ufunc":
             f = options[0]
             if len(options) == 1:
                 return f
@@ -166,7 +166,7 @@ def fvariogram(source, method, options, *args, **kwargs):
                 _f = lambda *a : f(*a[::-1])
                 return partial(_f, *options[1::-1])
         else:
-            f = mtags[method]
+            f = mtags[methd]
             _f = lambda *a : f(*a[::-1])
             return partial(_f, *options[::-1])
 
@@ -177,13 +177,13 @@ def fvariogram(source, method, options, *args, **kwargs):
         if len(options) < 4:
             options.append(False)#default to no optimized parameters return
 
-        if method == "interp":
+        if methd == "interp":
             return interp(h, v, options[2], *args, **kwargs)
-        elif method == "poly":
+        elif methd == "poly":
             return polyfit(h, v, options[2], options[3], *args, **kwargs)
-        elif method == "bmodel":
+        elif methd == "bmodel":
             return bmodel_fit(h, v, options[2], options[3], *args, **kwargs)
-        elif method == "umodel":
+        elif methd == "umodel":
             return umodel_fit(h, v, options[2], options[3], *args, **kwargs)
 
 def interp(h, v, kind, *args, **kwargs):
