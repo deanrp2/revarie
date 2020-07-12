@@ -14,7 +14,7 @@ class TestFVariogram(unittest.TestCase):
             y =  x**n - 2*x**(n-1) + x**(n-2)
 
             fit = fvariogram(source = "data",
-                             method = "poly",
+                             methd = "poly",
                              options = [x, y, n])
             self.assertTrue(np.allclose(y, fit(x)))
 
@@ -26,7 +26,7 @@ class TestFVariogram(unittest.TestCase):
         y = .04*x
 
         fit = fvariogram(source = "data",
-                         method = "interp",
+                         methd = "interp",
                          options = [x, y, "linear"])
         self.assertTrue(np.allclose(y, fit(x)))
 
@@ -40,7 +40,7 @@ class TestFVariogram(unittest.TestCase):
         y = f(x)
 
         fit = fvariogram(source = "data",
-                         method = "interp",
+                         methd = "interp",
                          options = [x,y,"nearest"])
 
         xnew = x[:-1] + np.random.uniform(0,1,99)*np.diff(x)
@@ -55,7 +55,7 @@ class TestFVariogram(unittest.TestCase):
         y = spherical(x, .2, 4, 6)
 
         fit = fvariogram(source = "data",
-                         method = "bmodel",
+                         methd = "bmodel",
                          options = [x,y,"sph"])
 
         self.assertTrue(np.allclose(y, fit(x)))
@@ -71,7 +71,7 @@ class TestFVariogram(unittest.TestCase):
         y = u(x, 1.4, 3.2)
 
         fit = fvariogram(source = "data",
-                         method = "umodel",
+                         methd = "umodel",
                          options = [x,y,u])
 
         self.assertTrue(np.allclose(y, fit(x)))
@@ -87,7 +87,7 @@ class TestFVariogram(unittest.TestCase):
         yu = u(x)
 
         ufunc = fvariogram(source = "func",
-                           method = "ufunc",
+                           methd = "ufunc",
                           options = [u])
         self.assertTrue(np.allclose(yu, ufunc(x)))
 
@@ -99,7 +99,7 @@ class TestFVariogram(unittest.TestCase):
         yb = spherical(x,.2, 4, 6)
 
         bfit = fvariogram(source = "func",
-                          method = "sph",
+                          methd = "sph",
                           options = [.2, 4, 6])
         self.assertTrue(np.allclose(yb, bfit(x)))
 
