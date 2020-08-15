@@ -84,7 +84,7 @@ class Variogram:
     def matheron(self, bin_type = "auto", bins = 10, var = False):
         #should add binning with constant number of values
         """
-        *Calculate Matheron variogram for points and field values previousely
+        *Calculate Matheron variogram for points and field values previously
         fed into variogram. A few options for specifying binning exist.
 
         Parameters
