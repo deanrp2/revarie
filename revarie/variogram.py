@@ -10,7 +10,7 @@ class Variogram:
     """
 
     Calculates lag and squared difference values. Various operations can be
-    performed with these quantities.
+    performed with these quantities within this class.
 
     """
     def __init__(self, x, f):
