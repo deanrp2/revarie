@@ -114,13 +114,13 @@ class Variogram:
 
         Returns
         -------
-        centers : numpy.array
+        centers : numpy.ndarray
             Bin centers used for variogram
-        n_bins : numpy array
+        n_bins : numpy.ndarray
             Number of point relations used to calculate each semivariance
-        v : numpy array
+        v : numpy.ndarray
             Estimated semivariance values at lags corresponding to bin centers
-        v_var (optional) : numpy array
+        v_var (optional) : numpy.ndarray
             Variance associated with squared difference values within a bin
         """
         bins = self.set_bins(bin_type, bins)
