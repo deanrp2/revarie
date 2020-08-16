@@ -64,8 +64,8 @@ def fvariogram(source, methd, options, *args, **kwargs):
     odels as well as fit around user-defined models. Functionality includes
     fitting variograms to built-in and user-defined models, interpolation and
     polynomial fitting. Put simply, can take a wide range of parameters to
-    describe how a function is made that gives variogram as a function of
-    distance. Then, returns that function.
+    describe how a python function is made that gives how a variogram varies
+    across of distance. Then, returns that function.
 
     Parameters
     ----------
