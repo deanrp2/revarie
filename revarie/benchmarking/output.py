@@ -37,7 +37,7 @@ def write(n, t, fname, typ, notes=False):
     """
     out = open(fname, "w")
     #Write CPU information
-    out.write("% --- CPU info\n")
+    out.write("% --- CPU Info\n")
     out.write(get_processor_info() + "\n\n")
 
     #Write testing information
@@ -46,9 +46,11 @@ def write(n, t, fname, typ, notes=False):
     out.write("Test Type:".ljust(24) + typ + "\n")
     mn = "%.2E"%n.min()
     mx = "%.2E"%n.max()
-    out.write("Nrange:".ljust(24) + mn + "-" + mx + "\n\n")
+    out.write("Nrange:".ljust(24) + mn + "-" + mx + "\n")
     if notes:
         out.write("Notes:".ljust(24) + notes + "\n")
+
+    out.write("\n")
 
     #Report fit to exponential of form t=k*n^p
     out.write("% --- Results Summary\n")
@@ -60,7 +62,7 @@ def write(n, t, fname, typ, notes=False):
                          ydata = t,
                          p0 = (a_est, k_est))
     out.write("Fitted k:".ljust(24) + "%.4E\n"%k)
-    out.write("Fitted a:".ljust(24) + "%.4E\n"%a)
+    out.write("Fitted p:".ljust(24) + "%.4E\n"%a)
     out.write("Predicted 1e5 Runtime:".ljust(24) + "%.4E s\n"%(k*1e5**a))
 
 
