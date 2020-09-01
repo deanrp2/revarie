@@ -10,7 +10,7 @@ class Variogram:
     """
 
     Calculates lag and squared difference values. Various operations can be
-    performed with these quantities.
+    performed with these quantities within this class.
 
     """
     def __init__(self, x, f):
@@ -84,7 +84,7 @@ class Variogram:
     def matheron(self, bin_type = "auto", bins = 10, var = False):
         #should add binning with constant number of values
         """
-        *Calculate Matheron variogram for points and field values previousely
+        *Calculate Matheron variogram for points and field values previously
         fed into variogram. A few options for specifying binning exist.
 
         Parameters
@@ -114,13 +114,13 @@ class Variogram:
 
         Returns
         -------
-        centers : numpy.array
+        centers : numpy.ndarray
             Bin centers used for variogram
-        n_bins : numpy array
+        n_bins : numpy.ndarray
             Number of point relations used to calculate each semivariance
-        v : numpy array
+        v : numpy.ndarray
             Estimated semivariance values at lags corresponding to bin centers
-        v_var (optional) : numpy array
+        v_var (optional) : numpy.ndarray
             Variance associated with squared difference values within a bin
         """
         bins = self.set_bins(bin_type, bins)
