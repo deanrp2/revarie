@@ -55,6 +55,9 @@ class Revarie:
 
         self.cov = np.maximum(h_cov,h_cov.T)
 
+    def calc_cholesky(self):
+        self.chol = np.linalg.cholesky(self.cov)
+
     def genf(self):
         """
         Generates random field values using covariance matrix calculated
