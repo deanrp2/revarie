@@ -15,4 +15,4 @@ Revarie is intended to be a spatial statistical analysis toolset which is target
 Its primary focus is on variography of cartesian fields. Currently, it supports computation and fitting of isotropic variograms along with other tools to support random field generation.
 
 # User Manual
-More information can be found in the user manual, named "revarie_user_manual.tex" in the repo.
+More information can be found in the user manual, named `revarie_user_manual.pdf` in the repo.
