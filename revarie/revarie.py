@@ -40,7 +40,7 @@ class Revarie:
 
     def calc_cov(self, x, model):
         """
-        Creates the covariance matrix for the points with the variogram model
+        Creates the covariance matrix from the variogram model
         """
         if x.ndim < 2:
             x = x.reshape(x.size, 1)
