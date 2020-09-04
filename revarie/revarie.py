@@ -7,7 +7,7 @@ from .variogram import *
 from .fvariogram import *
 
 class Revarie:
-    def __init__(self, x, mu, sill, model):
+    def __init__(self, x, mu, sill, model, epsilon = 0.):
         """
         Class to generate random fields based on a variogram given as a
         function in the 'model' parameter, mean and variance for a number of
@@ -27,6 +27,9 @@ class Revarie:
             Callable with takes numpy array of lag distances as argument and
             returns numpy array of variogram values. Should only take a single
             parameter.
+        epsilon : float
+            Perturbation amount to supress numerical instabilities in the
+            cholesky decomposition
         """
         self.x = x
         self.mu = mu
@@ -37,6 +40,7 @@ class Revarie:
         self.check_init()
 
         self.calc_cov(x, model)
+        self.calc_cholesky(epsilon)
 
     def calc_cov(self, x, model):
         """
@@ -55,23 +59,33 @@ class Revarie:
 
         self.cov = np.maximum(h_cov,h_cov.T)
 
-    def calc_cholesky(self):
-        self.chol = np.linalg.cholesky(self.cov)
+    def calc_cholesky(self, epsilon):
+        """
+        Generates cholesky decomposition from covariance matrix for efficient
+        random sampling
+        """
+        pert = epsilon*np.eye(self.cov.shape[0])
+        self.chol = np.linalg.cholesky(self.cov + pert)
 
-    def genf(self):
+    def genf(self, n=1):
         """
         Generates random field values using covariance matrix calculated
         previously.
 
+        Parameters
+        ----------
+        n : int
+            Number of fields to be generated
+
         Returns
         -------
         fvs : numpy array
-            Array of field values of length x.shape[0] that correspond to each
-            point in x
+            Array of field values of shape (dim, n) where each column holds an
+            independently generated field. Each row corresponds to an field
+            point coordinate value.
         """
-
-        fvs = np.random.multivariate_normal(np.ones(self.s)*self.mu, self.cov)
-        return fvs
+        U = np.random.normal(0,1, (self.s, n))
+        return np.ones((self.s,1))*self.mu + self.chol@U
 
     def check_init(self):
         if not callable(self.model):
