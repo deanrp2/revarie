@@ -131,6 +131,7 @@ class Variogram:
 
         gp = group_by(b_ind[np.where(b_ind != bins.size)])
         _, v = gp.mean(self.diffs[np.where(b_ind != bins.size)])#account for lags bigger than bins
+        v = v/2 #SEMI-variogram
 
         if var:
             _, v_var = gp.var(self.diffs[np.where(b_ind != bins.size)])#account for lags bigger than bins
