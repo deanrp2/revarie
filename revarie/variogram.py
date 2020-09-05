@@ -329,7 +329,10 @@ class Variogram:
             raise Exception("Number of data points (x) and number of field "
                             "values (f) do not match.")
         if self.f.ndim > 1:
-            raise Exception("Field values data (f) should be 1D")
+            if self.f.shape[1] == 1:
+                self.f = self.f.flatten()
+            else:
+                raise Exception("Field values data (f) should be 1D")
         if self.x.ndim > 1:
             if self.x.shape[0] < self.x.shape[1]:
                 warnings.warn("Dimension of domain exceeds number of data"
