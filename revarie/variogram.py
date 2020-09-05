@@ -126,6 +126,8 @@ class Variogram:
         bins = self.set_bins(bin_type, bins)
         centers = bins[:-1] + np.diff(bins,1)/2
 
+        self.bbs = bins #bin boundaries
+
         b_ind = np.digitize(self.lags, bins)
         n_bins = np.bincount(b_ind-1)[:-1]
 
