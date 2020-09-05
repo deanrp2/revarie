@@ -67,6 +67,7 @@ class Revarie:
         pert = epsilon*np.eye(self.cov.shape[0])
         self.chol = np.linalg.cholesky(self.cov + pert)
 
+
     def genf(self, n=1):
         """
         Generates random field values using covariance matrix calculated
