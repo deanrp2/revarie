@@ -21,7 +21,7 @@ class TestRevarie(unittest.TestCase):
         x = np.random.uniform(-1,1, (5,2))
         m = lambda h : 0
 
-        r = Revarie(x, 1, 0, m)
+        r = Revarie(x, 1, 0, m, 1e-8)
 
         self.assertTrue(np.allclose(r.genf(), 1))
 
