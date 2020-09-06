@@ -30,7 +30,7 @@ class TestRevarie(unittest.TestCase):
         Make sure length of generated field data array is same length of x
         """
         x = np.random.uniform(-1,1, (10,2))
-        m = lambda h : 1
+        m = lambda h : np.sqrt(h)
 
         r = Revarie(x, 1, 0, m)
         self.assertTrue(r.genf().size, x.shape[0])
@@ -42,7 +42,7 @@ class TestRevarie(unittest.TestCase):
         x = np.linspace(0,10,10)
         m = lambda h : 1
 
-        r = Revarie(x, 1, 1, m)
+        r = Revarie(x, 1, 1, m, 1e-13)
         self.assertTrue(np.allclose(r.cov, np.eye(10)))
 
 
