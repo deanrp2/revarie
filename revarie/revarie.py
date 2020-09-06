@@ -2,12 +2,14 @@ import numpy as np
 from  scipy.spatial.distance import pdist
 import functools
 import warnings
+import scipy.sparse as ssp
 
 from .variogram import *
 from .fvariogram import *
 
 class Revarie:
-    def __init__(self, x, mu, sill, model, epsilon = 0.):
+    def __init__(self, x, mu, sill, model, epsilon = 0., sparse = False,
+            sparse_tol = 0.01):
         """
         Class to generate random fields based on a variogram given as a
         function in the 'model' parameter, mean and variance for a number of
@@ -35,6 +37,8 @@ class Revarie:
         self.mu = mu
         self.sill = sill
         self.model = model
+        self.sparse = sparse
+        self.sparse_tol = sparse_tol
         self.s = x.shape[0]
 
         self.check_init()
