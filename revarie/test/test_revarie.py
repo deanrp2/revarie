@@ -55,3 +55,12 @@ class TestRevarie(unittest.TestCase):
         r = Revarie(x, 0, 1, m, sparse = True)
         self.assertTrue(r.mu == 0)
 
+    def test_sparse_cov(self):
+        x = np.linspace(0,3,8)
+        m = lambda h : np.piecewise(h, [h<=1,h>1],[lambda h : h,1])
+
+        r_dens = Revarie(x, 0, 1, m, sparse = False)
+        r_spar = Revarie(x, 0, 1, m, sparse = True)
+
+        self.assertTrue(np.allclose(r_dens.cov, r_spar.cov.toarray()))
+
