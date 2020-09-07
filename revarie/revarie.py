@@ -109,7 +109,7 @@ class Revarie:
                 raise Exception("scikit-sparse is required for sparse = True")
             pert = ssp.dia_matrix((epsilon*np.ones(self.s),1),
                        (self.s, self.s))
-            self.chol = cholesky(self.cov + pert)
+            self.chol = cholesky(self.cov + pert).L()
 
 
     def genf(self, n=1):
