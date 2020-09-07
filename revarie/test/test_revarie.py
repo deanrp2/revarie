@@ -8,7 +8,7 @@ class TestRevarie(unittest.TestCase):
         Test if any errors in initialization of Revarie instance
         """
         x = np.random.uniform(-1,1,(10,2))
-        m = lambda h : np.sqrt(h)
+        m = lambda h : 1
 
         r = Revarie(x, 0, 1, m)
 
