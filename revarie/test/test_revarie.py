@@ -45,4 +45,13 @@ class TestRevarie(unittest.TestCase):
         r = Revarie(x, 1, 1, m, 1e-13)
         self.assertTrue(np.allclose(r.cov, np.eye(10)))
 
+    def test_sparse_init(self):
+        """
+        Test initialization of sparse matrix
+        """
+        x = np.linspace(0,1,4)
+        m = lambda h : np.piecewise(h, [h<=1,h>1],[lambda h : h,1])
+
+        r = Revarie(x, 0, 1, m, sparse = True)
+        self.assertTrue(r.mu == 0)
 
