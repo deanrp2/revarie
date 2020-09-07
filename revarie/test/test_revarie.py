@@ -3,16 +3,16 @@ from revarie import Revarie
 import numpy as np
 
 class TestRevarie(unittest.TestCase):
-    def test_init(self):
-        """
-        Test if any errors in initialization of Revarie instance
-        """
-        x = np.random.uniform(-1,1,(10,2))
-        m = lambda h : np.sqrt(h)
-
-        r = Revarie(x, 0, 1, m)
-
-        self.assertTrue(r.mu == 0)
+    #def test_init(self):
+    #    """
+    #    Test if any errors in initialization of Revarie instance
+    #    """
+    #    x = np.random.uniform(-1,1,(10,2))
+    #    m = lambda h : np.sqrt(h)
+    #
+    #    r = Revarie(x, 0, 1, m)
+    #
+    #    self.assertTrue(r.mu == 0)
 
     def test_trivial(self):
         """
