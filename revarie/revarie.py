@@ -68,10 +68,10 @@ class Revarie:
         else:
             h_cov = ssp.lil_matrix((self.s, self.s), dtype = np.float64)
             h_cov.setdiag(self.sill)
-            nocorrs = np.where(np.isclose(covariances, self.sill))
-            ii = ii[nocorrs]
-            jj = jj[nocorrs]
-            covariances = covariances[nocorrs]
+            nocorrs = np.isclose(covariances, 0)
+            ii = ii[~nocorrs]
+            jj = jj[~nocorrs]
+            covariances = covariances[~nocorrs]
 
         h_cov[ii, jj] = covariances
         h_cov[jj, ii] = covariances
