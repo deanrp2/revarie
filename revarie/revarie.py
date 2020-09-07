@@ -27,8 +27,7 @@ from .variogram import *
 from .fvariogram import *
 
 class Revarie:
-    def __init__(self, x, mu, sill, model, epsilon = 0., sparse = False,
-            sparse_tol = 0.01):
+    def __init__(self, x, mu, sill, model, epsilon = 0., sparse = False):
         """
         Class to generate random fields based on a variogram given as a
         function in the 'model' parameter, mean and variance for a number of
@@ -57,7 +56,6 @@ class Revarie:
         self.sill = sill
         self.model = model
         self.sparse = sparse
-        self.sparse_tol = sparse_tol
         self.s = x.shape[0]
 
         self.check_init()
@@ -83,7 +81,7 @@ class Revarie:
         else:
             h_cov = ssp.lil_matrix((self.s, self.s), dtype = np.float64)
             h_cov.setdiag(self.sill)
-            nocorrs = np.where(covariances > self.sparse_tol*self.sill)
+            nocorrs = np.where(np.isclose(covariances > self.sill))
             ii = ii[nocorrs]
             jj = jj[nocorrs]
             covariances = covariances[nocorrs]
