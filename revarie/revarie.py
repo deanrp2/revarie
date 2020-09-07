@@ -3,6 +3,12 @@ from  scipy.spatial.distance import pdist
 import functools
 import warnings
 import scipy.sparse as ssp
+import sys
+
+try:
+    from sksparse.cholmod import cholesky
+except ImportError:
+    pass
 
 from .variogram import *
 from .fvariogram import *
@@ -53,23 +59,44 @@ class Revarie:
         if x.ndim < 2:
             x = x.reshape(x.size, 1)
 
-        h_cov = np.zeros((self.s, self.s))
-        h_cov[np.diag_indices(self.s)] = self.sill
-        mask_indices = np.mask_indices(self.s, np.triu, k=1)
+        ii, jj = np.mask_indices(self.s, np.triu, k=1)
 
         lags = pdist(x)
+        covariances = self.sill - self.model(lags)
 
-        h_cov[mask_indices] = self.sill - self.model(lags)
+        if not self.sparse:
+            h_cov = np.zeros((self.s, self.s), dtype = np.float64)
+            h_cov[np.diag_indices(self.s)] = self.sill
+        else:
+            h_cov = ssp.lil_matrix((self.s, self.s), dtype = np.float64)
+            h_cov.setdiag(self.sill)
+            nocorrs = np.where(covariances > self.sparse_tol*self.sill)
+            ii = ii[nocorrs]
+            jj = jj[nocorrs]
+            covariances = covariances[nocorrs]
 
-        self.cov = np.maximum(h_cov,h_cov.T)
+        h_cov[ii, jj] = covariances
+        h_cov[jj, ii] = covariances
+
+        if not self.sparse:
+            self.cov = h_cov
+        else:
+            self.cov = h_cov.asformat("csc")
 
     def calc_cholesky(self, epsilon):
         """
         Generates cholesky decomposition from covariance matrix for efficient
         random sampling
         """
-        pert = epsilon*np.eye(self.cov.shape[0])
-        self.chol = np.linalg.cholesky(self.cov + pert)
+        if not self.sparse:
+            pert = epsilon*np.eye(self.s)
+            self.chol = np.linalg.cholesky(self.cov + pert)
+        else:
+            if not "sksparse.cholmod" in sys.modules:
+                raise Exception("scikit-sparse is required for sparse = True")
+            pert = ssp.dia_matrix((epsilon*np.ones(self.s),1),
+                       (self.s, self.s))
+            self.chol = cholesky(self.cov + pert).L()
 
 
     def genf(self, n=1):
