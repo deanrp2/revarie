@@ -5,10 +5,23 @@ import warnings
 import scipy.sparse as ssp
 import sys
 
+import scipy.sparse.linalg as ssl #del
 try:
     from sksparse.cholmod import cholesky
 except ImportError:
     pass
+
+def scuffed_cholesky(A):
+    n = A.shape[0]
+    LU = ssl.splu(A, diag_pivot_thresh = 0)
+
+    c1 = (np.sort(LU.perm_r) == np.arange(n)).all()
+    c2 = (LU.U.diagonal() > 0).all()
+
+    if c1 and c2:
+        return LU.L.dot( ssp.diags(LU.U.diagonal()**0.5))
+    else:
+        raise Exception("covariance matrix singular")
 
 from .variogram import *
 from .fvariogram import *
@@ -96,7 +109,7 @@ class Revarie:
                 raise Exception("scikit-sparse is required for sparse = True")
             pert = ssp.dia_matrix((epsilon*np.ones(self.s),1),
                        (self.s, self.s))
-            self.chol = cholesky(self.cov + pert).L()
+            self.chol = cholesky(self.cov + pert)
 
 
     def genf(self, n=1):
