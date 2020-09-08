@@ -15,6 +15,7 @@ install:
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION scipy numpy coverage pytest
   - source activate test-environment
   - pip install revarie
+  - conda install -c conda-forge scikit-sparse
 script:
   - coverage run -m pytest
 env:
