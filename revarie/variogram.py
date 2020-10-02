@@ -373,7 +373,7 @@ class AnisoVariogram(Variogram):
 
     def calculate(self
 
-    def rm_ids(ids, inplace = False):
+    def rm_ids(self, ids, inplace = False):
         """
         Helper function for reduction methods.
 
