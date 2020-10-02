@@ -355,3 +355,6 @@ class Variogram:
         if self.x.ndim < 2:
             self.x = self.x.reshape(self.x.size,1)
 
+class AnisoVariogram(Variogram):
+    def __init__(self, x, f):
+        super().__init__(x, f)
