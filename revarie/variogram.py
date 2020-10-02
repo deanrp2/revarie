@@ -33,8 +33,8 @@ class Variogram:
 
         self.s = f.size
 
-        self.lags = self.calc_lags()
-        self.diffs = self.calc_diffs()
+        self.calc_lags()
+        self.calc_diffs()
 
         self.range = (np.min(self.lags), np.max(self.lags))
 
@@ -160,7 +160,7 @@ class Variogram:
         Upon initialization, calculates distances between all points given in
         domain. Performed before any reductions are applied.
         """
-        return pdist(self.x)
+        self.lags = pdist(self.x)
 
     def calc_diffs(self):
         """
@@ -168,8 +168,7 @@ class Variogram:
         values given. Performed before any reductions are applied.
         """
         c_indx = np.mask_indices(self.s, np.triu, k=1)
-        diffs = (self.f[c_indx[0]] - self.f[c_indx[1]])**2
-        return diffs
+        self.diffs = (self.f[c_indx[0]] - self.f[c_indx[1]])**2
 
     def _c_reduce(f):
         #bin order, bin type etc
@@ -357,21 +356,53 @@ class Variogram:
 
 class AnisoVariogram(Variogram):
     def __init__(self, x, f):
-        super().__init__(x, f)
+        Variogram.__init__(self, x, f)
+        print(self.lags)
+        exit()
         self.check_aniso_init()
+        print(self.range)
+        exit()
 
-        self.calc_angles()
-
-    def calc_angles(self):
+    def calc_lags(self):
         """
         Upon initialization, calculates angles between all points given in
         domain. Performed before any reductions are applied.
         """
         xdists = pdist(self.x[:,0].reshape(-1,1))
         ydists = pdist(self.x[:,1].reshape(-1,1))
-        self.angles = np.arctan(xdists/ydists)
+        self.lags = np.sqrt(xdists**2 + ydists**2)
+        self.angles = np.arctan2(ydists, xdists)
 
-    def calculate(self
+    def anisotropic(self,
+                    bin_type = "auto",
+                    bins = 10,
+                    azimuth_type = "auto",
+                    azimuths = None,
+                    azimuth_tol = None,
+                    bandwidth = "auto"):
+
+        bins = self.set_bins(bin_type, bins)
+        acenters, abounds = self.set_azimuths(azimuth_type, azimuths, azimuth_tol)
+
+    def set_azimuths(self, azimuth_type, azimuths, azimuth_tol):
+        if azimuth_type == "auto":
+            centers = np.linspace(0, np.pi, 8)[:-1]
+        elif azimuth_type == "lin":
+            centers = np.linspace(0, np.pi, azimuths + 1)[:-1]
+        elif azimuth_type == "man":
+            centers = azimuths.copy()
+
+        bounds = np.zeros(centers.size*2)
+        if azimuth_tol:
+            bounds[::2] = centers - azimuth_tol
+            bounds[1::2] = centers + azimuth_tol
+        else:
+            da = centers[0] - centers[1]
+            bounds[::2] = centers - da/2
+            bounds[1::2] = centers + da/2
+
+        return centers, bounds
+
 
     def rm_ids(self, ids, inplace = False):
         """
