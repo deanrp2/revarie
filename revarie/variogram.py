@@ -356,12 +356,8 @@ class Variogram:
 
 class AnisoVariogram(Variogram):
     def __init__(self, x, f):
-        Variogram.__init__(self, x, f)
-        print(self.lags)
-        exit()
+        super().__init__(x, f)
         self.check_aniso_init()
-        print(self.range)
-        exit()
 
     def calc_lags(self):
         """
