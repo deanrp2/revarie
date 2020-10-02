@@ -306,7 +306,7 @@ class Variogram:
 
 
 
-    def rm_ids(ids, inplace = True):
+    def rm_ids(self, ids, inplace = True):
         """
         Helper function for reduction methods.
         """
@@ -363,9 +363,15 @@ class AnisoVariogram(Variogram):
         self.calc_angles()
 
     def calc_angles(self):
+        """
+        Upon initialization, calculates angles between all points given in
+        domain. Performed before any reductions are applied.
+        """
         xdists = pdist(self.x[:,0].reshape(-1,1))
         ydists = pdist(self.x[:,1].reshape(-1,1))
         self.angles = np.arctan(xdists/ydists)
+
+    def calculate(self
 
     def rm_ids(ids, inplace = False):
         """
