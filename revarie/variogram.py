@@ -260,7 +260,7 @@ class Variogram:
         return wrapper
 
     @_c_rreduce
-    def rreduce(self, typ, amnt, inplace = False):
+    def rreduce(self, typ, amnt, inplace = True):
         """
         *Uniformly downsample stored lags and field value differences for
         faster calculations and smaller memory size. Object points and field
@@ -306,7 +306,7 @@ class Variogram:
 
 
 
-    def rm_ids(ids, inplace = False):
+    def rm_ids(ids, inplace = True):
         """
         Helper function for reduction methods.
         """
@@ -358,3 +358,44 @@ class Variogram:
 class AnisoVariogram(Variogram):
     def __init__(self, x, f):
         super().__init__(x, f)
+        self.check_aniso_init()
+
+        self.calc_angles()
+
+    def calc_angles(self):
+        xdists = pdist(self.x[:,0].reshape(-1,1))
+        ydists = pdist(self.x[:,1].reshape(-1,1))
+        self.angles = np.arctan(xdists/ydists)
+
+    def rm_ids(ids, inplace = False):
+        """
+        Helper function for reduction methods.
+
+        inplace True highly reccomended
+        """
+        if inplace:
+            self.lags = self.lags[ids]
+            self.diffs = self.diffs[ids]
+            self.angles = self.angles[ids]
+            self.range = (np.min(self.lags), np.max(self.lags))
+            self.reduce = True
+        else:
+            new = Variogram(self.x, self.f)
+            new.lags = new.lags[ids]
+            new.diffs = new.diffs[ids]
+            new.angles = new.angles[ids]
+            new.range = (np.min(new.lags), np.max(new.lags))
+            new.reduce = True
+            return new
+
+    def check_aniso_init(self):
+        """
+        Run checks on anisotropic variogram that are not run on the isotropic
+        variogram
+        """
+        if self.x.shape[1] != 2:
+            raise Exception("Currently, only anisotropic variogram calculatio"
+                "supported for 2D fields")
+
+
+
