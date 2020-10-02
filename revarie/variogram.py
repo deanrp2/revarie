@@ -193,7 +193,7 @@ class Variogram:
         return wrapper
 
     @_c_reduce
-    def reduce(self, typ, bnds, inplace = True):#"abs", "quant"
+    def reduce(self, typ, bnds, inplace = True):
         """
         *Reduce the lag domain of a given Variogram object. Removes data that
         lay outside the given lag boundaries. Very useful for reducing run
