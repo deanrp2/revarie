@@ -357,6 +357,7 @@ class Variogram:
 class AnisoVariogram(Variogram):
     def __init__(self, x, f):
         super().__init__(x, f)
+
         self.check_aniso_init()
 
     def calc_lags(self):
@@ -379,6 +380,8 @@ class AnisoVariogram(Variogram):
 
         bins = self.set_bins(bin_type, bins)
         acenters, abounds = self.set_azimuths(azimuth_type, azimuths, azimuth_tol)
+        print(acenters*180/np.pi)
+        print(abounds*180/np.pi)
 
     def set_azimuths(self, azimuth_type, azimuths, azimuth_tol):
         if azimuth_type == "auto":
