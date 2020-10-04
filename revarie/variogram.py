@@ -363,8 +363,11 @@ class AnisoVariogram(Variogram):
         Upon initialization, calculates angles between all points given in
         domain. Performed before any reductions are applied.
         """
-        xdists = pdist(self.x[:,0].reshape(-1,1))
-        ydists = pdist(self.x[:,1].reshape(-1,1))
+        ti = np.triu_indices(self.s, 1)
+        xcombos = [m[ti] for m in np.meshgrid(self.x[:,0], self.x[:,0])]
+        ycombos = [m[ti] for m in np.meshgrid(self.x[:,1], self.x[:,1])]
+        xdists = np.subtract(*xcombos)
+        ydists = np.subtract(*ycombos)
         self.lags = np.sqrt(xdists**2 + ydists**2)
         self.angles = np.arctan2(ydists, xdists)
 
@@ -378,6 +381,9 @@ class AnisoVariogram(Variogram):
 
         bins = self.set_bins(bin_type, bins)
         acenters, abounds = self.set_azimuths(azimuth_type, azimuths, azimuth_tol)
+
+        b_ind = np.digitize(self.lags, bins)
+        n_bins = np.bincount(b_ind-1)[:-1]
         print(acenters*180/np.pi)
         print(abounds*180/np.pi)
 
