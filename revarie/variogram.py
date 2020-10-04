@@ -369,7 +369,7 @@ class AnisoVariogram(Variogram):
         xdists = np.subtract(*xcombos)
         ydists = np.subtract(*ycombos)
         self.lags = np.sqrt(xdists**2 + ydists**2)
-        self.angles = np.arctan2(ydists, xdists)
+        self.angles = np.arctan2(ydists, xdists) % np.pi
 
     def anisotropic(self,
                     bin_type = "auto",
@@ -400,10 +400,12 @@ class AnisoVariogram(Variogram):
             bounds[::2] = centers - azimuth_tol
             bounds[1::2] = centers + azimuth_tol
         else:
-            da = centers[0] - centers[1]
+            da = centers[1] - centers[0]
             bounds[::2] = centers - da/2
             bounds[1::2] = centers + da/2
 
+        centers = centers % np.pi
+        bounds = bounds % np.pi
         return centers, bounds
 
 
