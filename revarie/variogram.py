@@ -374,21 +374,23 @@ class AnisoVariogram(Variogram):
     def anisotropic(self,
                     bin_type = "auto",
                     bins = 10,
-                    azimuth_type = "auto",
                     azimuths = 8,
                     azimuth_tol = None,
                     bandwidth = "auto"):
 
         bin_boundaries = self.set_bins(bin_type, bins)
         bcenters = bin_boundaries[:-1] + np.diff(bin_boundaries,1)/2
-        acenters, abounds, azimuth_tol = self.set_azimuths(azimuth_type,
-                                                           azimuths,
+        acenters, abounds, azimuth_tol = self.set_azimuths(azimuths,
                                                            azimuth_tol)
+
+        bandwidth = self.set_bandwidth(bandwidth, bin_boundaries, azimuth_tol)
+        nbins = bcenters.size
+
         #calculate bin numbers for lag distances
         b_ind = np.digitize(self.lags, bin_boundaries)
 
-        #valids indicate lags that are smaller than the max bin
-        valids = np.where(b_ind != bins + 1)
+        #valids indicate lags that are in binning range
+        valids = np.where((b_ind != 0) &  (b_ind < nbins + 1))
         b_ind_valid = b_ind[valids]
         lags_valid = self.lags[valids]
         angles_valid = self.angles[valids]
@@ -397,28 +399,39 @@ class AnisoVariogram(Variogram):
         #compute bin numbers for the azimuthal bins
         a_ind = np.digitize(angles_valid, abounds)
 
+        #valids indicate angles that lie in an azimuthal bin
+        valids = np.where((a_ind % 2 == 1) |  (a_ind == 0))
+        b_ind_valid = b_ind_valid[valids]
+        a_ind_valid = a_ind[valids]
+        lags_valid = self.lags[valids]
+        angles_valid = angles_valid[valids]
+        diffs_valid = diffs_valid[valids]
+
+
         #compute bandwidth and distance of each point from nearest
         #  azimuthal center
-        bandwidth = self.set_bandwidth(bandwidth, bin_boundaries, azimuth_tol)
-        adevs = np.abs(angles_valid - acenters[(a_ind-1)//2]) #angle b/w center
-                                                              # and point
+        adevs = np.abs(angles_valid - acenters[(a_ind_valid-1)//2]) #angle b/w center
+                                                                    # and point
+
         bs = lags_valid*np.sin(adevs) # some trig to get distance from center
 
         #valids indicate lags that are within the bandwidth (and are therefore
         #  valid)
         valids = np.where(bs < bandwidth)
         b_ind_valid = b_ind_valid[valids]
-        a_ind_valid = a_ind[valids]
+        a_ind_valid = a_ind_valid[valids]
         lags_valid = lags_valid[valids]
         angles_valid = angles_valid[valids]
-        diffs_valid = self.diffs[valids]
+        diffs_valid = diffs_valid[valids]
+
 
         # grouping the last bin with the first bin
         a_ind_valid[np.where(a_ind_valid == (abounds.size - 1))] = 1
         acenters = acenters[:-1]
 
+
         # combining binning criteria to make one bin parameter
-        ad_bins = (a_ind_valid//2)*bins + b_ind_valid
+        ad_bins = (a_ind_valid//2)*nbins + b_ind_valid
 
         gp = group_by(ad_bins)
         bids, v_g = gp.mean(diffs_valid)
@@ -427,16 +440,15 @@ class AnisoVariogram(Variogram):
         #build data struct to hold variogram
         v = np.zeros(bcenters.size*acenters.size)
         v[bids-1] = v_g
-        l_bins, a_bins = [a.flatten() for a in np.meshgrid(bcenters, acenters)]
-        n_bins = np.bincount(ad_bins-1)
+        v = v.reshape([-1, nbins])
 
-        return l_bins, a_bins, n_bins, v
+        n_bins = np.bincount(ad_bins-1).reshape([-1, nbins])
 
-    def set_azimuths(self, azimuth_type, azimuths, azimuth_tol):
-        if azimuth_type == "auto":
-            centers = np.linspace(0, np.pi, azimuths + 1)
-        elif azimuth_type == "man":
-            centers = azimuths.copy()
+
+        return bcenters, acenters, n_bins.T, v.T
+
+    def set_azimuths(self, azimuths, azimuth_tol):
+        centers = np.linspace(0, np.pi, azimuths + 1)
 
         bounds = np.zeros(centers.size*2)
         if azimuth_tol:
