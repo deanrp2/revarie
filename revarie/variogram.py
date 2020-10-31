@@ -429,7 +429,6 @@ class AnisoVariogram(Variogram):
         a_ind_valid[np.where(a_ind_valid == (abounds.size - 1))] = 1
         acenters = acenters[:-1]
 
-
         # combining binning criteria to make one bin parameter
         ad_bins = (a_ind_valid//2)*nbins + b_ind_valid
 
