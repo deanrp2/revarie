@@ -383,6 +383,7 @@ class AnisoVariogram(Variogram):
         acenters, abounds, azimuth_tol = self.set_azimuths(azimuths,
                                                            azimuth_tol)
 
+
         bandwidth = self.set_bandwidth(bandwidth, bin_boundaries, azimuth_tol)
         nbins = bcenters.size
 
