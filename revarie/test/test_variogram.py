@@ -69,7 +69,19 @@ class TestVariogram(unittest.TestCase):
 
         self.assertTrue(np.array_equal(np.diff(l2)>0, np.diff(d2)>0))
 
+    def test_bounded_reduce(self):
+        """
+        Test bounded variogram reduction methods
+        """
 
+        x = np.array([.1, .5,.6,.9])
+        v = Variogram(x,x)
+        v.reduce("abs", [0.29, 0.41])
+
+        ans = np.array([0.4,0.4, 0.3])
+
+        self.assertTrue(np.allclose(v.lags, ans))
+        self.assertTrue(np.allclose(v.diffs, ans**2))
 
 
 
