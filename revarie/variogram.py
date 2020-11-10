@@ -18,7 +18,7 @@ class Variogram:
         Parameters
         ----------
         x : numpy.ndarray
-            Array of shape (m,n) where n is number of points in an
+            Array of shape (n,m) where n is number of points in an
             m-dimensional domain
         f : numpy.ndarray
             Array of field values observed at each of the n points.
@@ -299,8 +299,6 @@ class Variogram:
         ids = np.choice(self.lags.size, size)
         self.rm_ids(ids, inplace)
 
-
-
     def rm_ids(self, ids, inplace = True):
         """
         Helper function for reduction methods.
@@ -351,7 +349,23 @@ class Variogram:
             self.x = self.x.reshape(self.x.size,1)
 
 class AnisoVariogram(Variogram):
+    """
+    Calculates lags, angles and squared difference values. Various operations
+    can be performed with these quantities within this class. Capability to
+    calculate anisotropic variograms. Only works with 2D fields.
+    """
     def __init__(self, x, f):
+        """
+        Create variogram and calculate lags, angles and squared differences
+
+        Parameters
+        ----------
+        x : numpy.ndarray
+            Array of shape (n,2) where n is number of points in an
+            2-dimensional domain
+        f : numpy.ndarray
+            Array of field values observed at each of the n points.
+        """
         super().__init__(x, f)
 
         self.check_aniso_init()
@@ -375,6 +389,33 @@ class AnisoVariogram(Variogram):
                     azimuths = 8,
                     azimuth_tol = None,
                     bandwidth = "auto"):
+        """
+        *Calculate Anisotropic variogram for points and field values
+        previously fed into the AnisoVariogram object. A few options for
+        specifying binning exist.
+
+        Parameters
+        ----------
+        bin_type : str
+            Descriptor of the format of data passed into the bin parameter,
+            refer to Variogram.matheron for complete list of options
+        bins : int, list, array-like
+            Description of how binnin will be performed in spatial
+            descritization of variogram, refer to Variogram.matheron for
+            complete list of options
+        aximuths : int
+            Number of linearly-spaced azumuthal bins between 0 and pi to be
+            used
+        azimuth_tol : int
+            Angular tolerance around each of the azumuths used for binning.
+            To avoid bin overlap, this should be less than pi/(2*number of
+            azimuths). Value should be input in radians.
+        bandwidth : str, float
+            Descriptor of bandwidth tolerance, can be one of:
+                * "auto" : automatically selects a bandwidth equal to the first
+                    bin boundary times the tangent of the azimuthal tolerance
+                * float : user specified bandwidth (recomended)
+        """
 
         bin_boundaries = self.set_bins(bin_type, bins)
         bcenters = bin_boundaries[:-1] + np.diff(bin_boundaries,1)/2
@@ -446,6 +487,9 @@ class AnisoVariogram(Variogram):
         return bcenters, acenters, n_bins.T, v.T
 
     def set_azimuths(self, azimuths, azimuth_tol):
+        """
+        Calculate azimuth boundaries.
+        """
         centers = np.linspace(0, np.pi, azimuths + 1)
 
         bounds = np.zeros(centers.size*2)
@@ -462,6 +506,9 @@ class AnisoVariogram(Variogram):
         return centers, bounds, azimuth_tol
 
     def set_bandwidth(self, bandwidth, bins, azimuth_tol):
+        """
+        Get bandwidth from user input
+        """
         if bandwidth == "auto":
             return bins[1]*np.tan(azimuth_tol)
         else:
