@@ -169,7 +169,7 @@ class Variogram:
     def _c_reduce(f):
         #bin order, bin type etc
         @functools.wraps(f)
-        def wrapper(self, typ, bnds, inplace):
+        def wrapper(self, typ, bnds, inplace = True):
             if bnds[0] > bnds [1]:
                 raise Exception("Lower and upper bounds out of order.")
             if typ == "abs":
@@ -233,13 +233,14 @@ class Variogram:
             min_lag = np.quantile(self.lags, bnds[0])
             max_lag = np.quantile(self.lags, bnds[1])
 
-        ids = np.where(min_lag <= self.lags <= max_lag)
+        ids = np.where(np.logical_and(min_lag <= self.lags,
+            self.lags <= max_lag))
         self.rm_ids(ids, inplace)
 
 
     def _c_rreduce(f):
         @functools.wraps(f)
-        def wrapper(self, typ, amnt, inplace):
+        def wrapper(self, typ, amnt, inplace=True):
             if typ == "abs":
                 if not 0 < amnt < self.lags.size:
                     raise Exception("'amnt' not between 0 and size of"
@@ -296,7 +297,7 @@ class Variogram:
         if typ == "abs":
             size = amnt
 
-        ids = np.choice(self.lags.size, size)
+        ids = np.random.choice(self.lags.size, size)
         self.rm_ids(ids, inplace)
 
     def rm_ids(self, ids, inplace = True):
