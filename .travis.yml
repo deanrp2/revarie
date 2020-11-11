@@ -16,6 +16,7 @@ install:
   - source activate test-environment
 #  - pip install revarie
   - conda install -c conda-forge scikit-sparse
+  - pip install numpy-indexed
 script:
   - coverage run -m pytest
   - python -m unittest
